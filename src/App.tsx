@@ -3,15 +3,24 @@ import theme from './components/GlobalStyles/Theme';
 
 import Navbar from './components/Navbar/Navbar';
 import Header from './components/Header/Header';
+import MainPage from './components/MainPage/MainPage';
 
 import { ThemeProvider } from 'styled-components';
+import { useState } from 'react';
 
 function App() {
+  const [selectedFilter, setSelectedFilter] = useState<string>('Least Upvotes');
+
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <Navbar />
-      <Header />
+      <Header handleFilterChange={handleFilterChange} />
+      <MainPage selectedFilter={selectedFilter} />
     </ThemeProvider>
   );
 }

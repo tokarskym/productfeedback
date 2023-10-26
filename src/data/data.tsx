@@ -18,7 +18,7 @@ interface UserComment {
   replyingTo?: string;
 }
 
-interface ProductRequest {
+export interface ProductRequest {
   id: number;
   title: string;
   category: 'enhancement' | 'feature' | 'bug';
