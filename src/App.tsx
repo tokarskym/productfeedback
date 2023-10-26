@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 function App() {
   const [selectedFilter, setSelectedFilter] = useState<string>('Least Upvotes');
+  const [selectedTag, setSelectedTag] = useState<string>('All');
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);

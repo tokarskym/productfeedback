@@ -5,6 +5,8 @@ export const HeaderBar = styled.div`
   width: 100%;
   height: 56px;
   background-color: ${(props) => props.theme.colors.darkBlue};
+  margin-bottom: 20px;
+
   & p {
     color: #f2f4fe;
     font-size: 13px;
@@ -47,6 +49,7 @@ export const FilterModal = styled.div`
   top: 40px;
   z-index: 1;
   background-color: white;
+  box-shadow: rgba(72, 84, 159, 0.25) 0px 10px 20px 0px;
 `;
 
 export const HorizontalRule = styled.hr`

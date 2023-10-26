@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 
 import Hamburger from '../../images/shared/mobile/icon-hamburger.svg';
 import CloseHamburger from '../../images/shared/mobile/icon-close.svg';
+import { capitalizeFirstLetter } from '../../Utils/Functions';
 
 import { NavbarHeader, NavbarContainer, Logo, AppName, HamburgerButton, ModalBackground, ModalContainer, TagsContainer, ButtonTag, Dot } from './NavbarStyles';
 
@@ -40,10 +41,6 @@ const Navbar: React.FC = () => {
 
     setStatusCounts(counts);
   }, [requestsData]);
-
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
 
   const isValidStatus = (status: string): status is 'suggestion' | 'planned' | 'in-progress' | 'live' => {
     return ['suggestion', 'planned', 'in-progress', 'live'].includes(status);
