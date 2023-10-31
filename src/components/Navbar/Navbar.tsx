@@ -17,7 +17,11 @@ type ItemType = {
   [key: string]: any;
 };
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  handleCategoryChange: (category: string) => void;
+  selectedCategory: string;
+}
+const Navbar: React.FC<NavbarProps> = ({ handleCategoryChange, selectedCategory }) => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
   const [statusCounts, setStatusCounts] = useState<CountsType>({});
 
@@ -63,7 +67,9 @@ const Navbar: React.FC = () => {
         <ModalContainer className={isHamburgerOpen ? 'active' : ''}>
           <TagsContainer>
             {TagsArray.map((tag) => (
-              <ButtonTag key={tag}>{tag}</ButtonTag>
+              <ButtonTag isChosen={selectedCategory === tag} key={tag} onClick={() => handleCategoryChange(tag)}>
+                {tag}
+              </ButtonTag>
             ))}
           </TagsContainer>
           <TagsContainer>

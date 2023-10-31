@@ -79,14 +79,14 @@ export const TagsContainer = styled.div`
   column-gap: 5px;
 `;
 
-export const ButtonTag = styled.button`
+export const ButtonTag = styled.button<{ isChosen?: boolean }>`
   padding: 7px 13px;
   width: auto;
   height: auto;
   border: none;
   border-radius: 7px;
-  background-color: ${(props) => props.theme.colors.lightGray};
-  color: ${(props) => props.theme.colors.blue};
+  background-color: ${(props) => (props.isChosen ? props.theme.colors.blue : props.theme.colors.lightGray)};
+  color: ${(props) => (props.isChosen ? props.theme.colors.white : props.theme.colors.blue)};
   font-weight: 600;
 `;
 

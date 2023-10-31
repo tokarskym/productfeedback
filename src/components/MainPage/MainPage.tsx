@@ -1,16 +1,12 @@
-import styled from 'styled-components';
 import { data } from '../../data/data';
+import styled from 'styled-components';
 
 import { useEffect, useState } from 'react';
-import { ProductRequest } from '../../data/data';
-
 import { Container } from '../GlobalStyles/ReusedStyles';
-import { ButtonTag } from '../Navbar/NavbarStyles';
 
-import { capitalizeFirstLetter } from '../../Utils/Functions';
+import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
 
-import ArrowUpBlueSVG from '../../images/shared/icon-arrow-up-blue.svg';
-import CommentSVG from '../../images/shared/icon-comments.svg';
+import { ProductRequest } from '../../data/data';
 
 const SuggestionsContainer = styled(Container)`
   display: flex;
@@ -18,56 +14,18 @@ const SuggestionsContainer = styled(Container)`
   gap: 20px;
 `;
 
-const SuggestionSingleElement = styled.div`
-  background-color: ${(props) => props.theme.colors.white};
-  width: 100%;
-  height: auto;
-  padding: 20px;
-  border-radius: 10px;
-`;
-
-const SpaceBetweenContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const RequestTitle = styled.h4`
-  color: ${(props) => props.theme.colors.darkerDarkBlue};
-  margin-bottom: 10px;
-  font-size: 13px;
-`;
-
-const CommentTag = styled(RequestTitle)`
-  margin-bottom: 0;
-  display: inline-block;
-  margin-left: 10px;
-`;
-
-const RequestDescription = styled.p`
-  font-size: 13px;
-  color: ${(props) => props.theme.colors.gray};
-  margin-bottom: 10px;
-`;
-
-const UpvotesTag = styled(ButtonTag)`
-  color: ${(props) => props.theme.colors.darkerDarkBlue};
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 15px;
-`;
-
 interface MainPageProps {
   selectedFilter: string;
+  selectedCategory: string;
+  requestList: ProductRequest[];
 }
-const MainPage: React.FC<MainPageProps> = ({ selectedFilter }) => {
-  const productRequests = data.productRequests;
-  const productSuggestions = productRequests.filter((productRequest) => productRequest.status === 'suggestion');
+
+const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList }) => {
+  const productSuggestions = requestList.filter((request) => request.status === 'suggestion');
   const [sortedSuggestions, setSortedSuggestions] = useState<ProductRequest[]>(productSuggestions);
 
   useEffect(() => {
-    const newSortedSuggestions = [...productSuggestions];
+    const newSortedSuggestions = [...sortedSuggestions];
 
     if (selectedFilter === 'Most Upvotes') {
       newSortedSuggestions.sort((a, b) => b.upvotes - a.upvotes);
@@ -81,29 +39,33 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter }) => {
     setSortedSuggestions(newSortedSuggestions);
   }, [selectedFilter]);
 
+  useEffect(() => {
+    const newSortedSuggestions = [...productSuggestions];
 
-  
+    if (selectedCategory === 'All') {
+      setSortedSuggestions([...productSuggestions]);
+    } else if (selectedCategory === 'Bug') {
+      const bugSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      setSortedSuggestions(bugSuggestions);
+    } else if (selectedCategory === 'Enhancement') {
+      const enhacementSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      setSortedSuggestions(enhacementSuggestions);
+    } else if (selectedCategory === 'Feature') {
+      const featureSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      setSortedSuggestions(featureSuggestions);
+    } else if (selectedCategory === 'UX') {
+      const uxSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      setSortedSuggestions(uxSuggestion);
+    } else if (selectedCategory === 'UI') {
+      const uiSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      setSortedSuggestions(uiSuggestion);
+    }
+  }, [selectedCategory]);
 
   return (
     <SuggestionsContainer>
       {sortedSuggestions.map((request) => {
-        return (
-          <SuggestionSingleElement key={request.id}>
-            <RequestTitle>{request.title}</RequestTitle>
-            <RequestDescription>{request.description}</RequestDescription>
-            <ButtonTag style={{ display: 'block', marginBottom: '10px' }}>{capitalizeFirstLetter(request.category)}</ButtonTag>
-            <SpaceBetweenContainer>
-              <UpvotesTag>
-                <img src={ArrowUpBlueSVG} />
-                {request.upvotes}
-              </UpvotesTag>
-              <SpaceBetweenContainer>
-                <img src={CommentSVG} style={{ display: 'inline-block' }} />
-                <CommentTag>{request?.comments?.length || 0}</CommentTag>
-              </SpaceBetweenContainer>
-            </SpaceBetweenContainer>
-          </SuggestionSingleElement>
-        );
+        return <RequestSingleElement request={request} />;
       })}
     </SuggestionsContainer>
   );
