@@ -1,6 +1,8 @@
 import { data } from '../../data/data';
 import styled from 'styled-components';
 
+import { Link } from 'react-router-dom';
+
 import { useEffect, useState } from 'react';
 import { Container } from '../GlobalStyles/ReusedStyles';
 
@@ -65,7 +67,11 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
   return (
     <SuggestionsContainer>
       {sortedSuggestions.map((request) => {
-        return <RequestSingleElement request={request} />;
+        return (
+          <Link key={request.id} to={`/requests/${request.id}`}>
+            <RequestSingleElement request={request} />
+          </Link>
+        );
       })}
     </SuggestionsContainer>
   );

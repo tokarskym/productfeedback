@@ -1,7 +1,6 @@
 import styled from 'styled-components';
 
 import { ProductRequest } from '../../data/data';
-import { Container } from '../GlobalStyles/ReusedStyles';
 import { ButtonTag } from '../Navbar/NavbarStyles';
 
 import ArrowUpBlueSVG from '../../images/shared/icon-arrow-up-blue.svg';

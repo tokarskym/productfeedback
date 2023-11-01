@@ -42,7 +42,7 @@ h3 {
 
 h4 {
     font-weight: 700, 
-    font-size: 14px; 
+    font-size: 13px; 
     line-height: 20px; 
     letter-spacing: -0.20px;  
 }
@@ -55,6 +55,10 @@ p {
 
 li {
     list-style-type: none;
+}
+
+a {
+    text-decoration: none; 
 }
 
 `;
