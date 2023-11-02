@@ -10,6 +10,7 @@ import { capitalizeFirstLetter } from '../../Utils/Functions';
 
 interface SingleRequestElementProps {
   request: ProductRequest;
+  calculateCommentNumbers: (request: any) => number;
 }
 
 const SuggestionSingleElement = styled.div`
@@ -52,7 +53,8 @@ const UpvotesTag = styled(ButtonTag)`
   gap: 15px;
 `;
 
-const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request }) => {
+const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, calculateCommentNumbers }) => {
+
   return (
     <SuggestionSingleElement key={request.id}>
       <RequestTitle>{request.title}</RequestTitle>
@@ -65,7 +67,7 @@ const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request }) 
         </UpvotesTag>
         <SpaceBetweenContainer>
           <img src={CommentSVG} style={{ display: 'inline-block' }} />
-          <CommentTag>{request?.comments?.length || 0}</CommentTag>
+          <CommentTag>{calculateCommentNumbers(request)}</CommentTag>
         </SpaceBetweenContainer>
       </SpaceBetweenContainer>
     </SuggestionSingleElement>

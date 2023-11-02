@@ -2,26 +2,26 @@ import styled from 'styled-components';
 import { ProductRequest } from '../../data/data';
 import ReturnButtonSVG from '../../images/shared//icon-arrow-left.svg';
 
-import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
 import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
+import SingleReply from './SingleReply';
+import ReplyForm from './ReplyForm';
+import NewCommentForm from './NewCommentForm';
 
-const ProductRequestNavbar = styled(Container)`
+export const ProductRequestNavbar = styled(Container)`
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 72px;
 `;
 
-const ReturnButton = styled.button`
+export const ReturnButton = styled.button`
   font-weight: 700;
   color: #647196;
   height: 52px;
@@ -34,16 +34,16 @@ const ReturnButton = styled.button`
   gap: 10px;
 `;
 
-const EditFeedbackButton = styled(PrimaryButton)`
+export const EditFeedbackButton = styled(PrimaryButton)`
   background-color: ${(props) => props.theme.colors.blue};
 `;
 
-const RequestDetailsAndCommentsContainer = styled(Container)`
+export const RequestDetailsAndCommentsContainer = styled(Container)`
   margin-bottom: 40px;
   margin-top: 10px;
 `;
 
-const CommentsContainer = styled.div`
+export const CommentsContainer = styled.div`
   background-color: ${(props) => props.theme.colors.white};
   width: 100%;
   height: auto;
@@ -52,33 +52,33 @@ const CommentsContainer = styled.div`
   margin-top: 20px;
 `;
 
-const NewCommentContainer = styled(CommentsContainer)`
+export const NewCommentContainer = styled(CommentsContainer)`
   margin-top: 24px;
   margin-bottom: 24px;
 `;
 
-const CommentNumber = styled.h3`
+export const CommentNumber = styled.h3`
   color: ${(props) => props.theme.colors.darkerDarkBlue};
   margin-bottom: 20px;
 `;
 
-const UserImage = styled.img`
+export const UserImage = styled.img`
   border-radius: 50%;
   width: auto;
   height: 40px;
 `;
 
-const UserName = styled.h4`
+export const UserName = styled.h4`
   color: ${(props) => props.theme.colors.darkerDarkBlue};
 `;
 
-const UserNickName = styled.p`
+export const UserNickName = styled.p`
   font-size: 13px;
   font-weight: 400;
   color: ${(props) => props.theme.colors.gray};
 `;
 
-const ReplyButton = styled.button`
+export const ReplyButton = styled.button`
   color: ${(props) => props.theme.colors.blue};
   border: none;
   background-color: transparent;
@@ -86,26 +86,26 @@ const ReplyButton = styled.button`
   font-size: 13px;
 `;
 
-const UserInfoContainer = styled.div`
+export const UserInfoContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 10px;
 `;
 
-const CommentHeader = styled.div`
+export const CommentHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 15px;
 `;
 
-const CommentContent = styled.p`
+export const CommentContent = styled.p`
   font-size: 13px;
   color: ${(props) => props.theme.colors.gray};
   margin-bottom: 24px;
 `;
-const SingleCommentContainer = styled.div``;
-const SingleReplyContainer = styled.div<{ isFirstChild: boolean }>`
+export const SingleCommentContainer = styled.div``;
+export const SingleReplyContainer = styled.div<{ isFirstChild: boolean }>`
   margin-left: 23px;
   position: relative;
   &::before {
@@ -121,21 +121,21 @@ const SingleReplyContainer = styled.div<{ isFirstChild: boolean }>`
   }
 `;
 
-const ReplyTo = styled.h3`
+export const ReplyTo = styled.h3`
   color: ${(props) => props.theme.colors.purple};
   font-size: 13px;
   display: inline-block;
   margin-right: 5px;
 `;
 
-const TextAreaContainer = styled.div`
+export const TextAreaContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   margin-bottom: 20px;
 `;
-const TextAreaCommentReply = styled.textarea`
+export const TextAreaCommentReply = styled.textarea`
   padding: 20px;
   font-size: 13px;
   font-weight: 400;
@@ -155,12 +155,12 @@ const TextAreaCommentReply = styled.textarea`
   }
 `;
 
-const CharsLeftParagraph = styled.p`
+export const CharsLeftParagraph = styled.p`
   font-size: 15px;
   color: ${(props) => props.theme.colors.gray};
 `;
 
-const ErrorParagraph = styled.p`
+export const ErrorParagraph = styled.p`
   font-size: 13px;
   color: red;
   position: absolute;
@@ -171,9 +171,11 @@ const ErrorParagraph = styled.p`
 interface RequestDetailsProps {
   requestList: ProductRequest[];
   onAddNewComment: (productRequestID: number, newCommentContent: string) => void;
+  onAddReply: (productRequestID: number, commentID: number, newReplyContent: string, replyingToUsername: string) => void;
+  calculateCommentNumbers: (request: any) => number;
 }
 
-const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewComment }) => {
+const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewComment, onAddReply, calculateCommentNumbers }) => {
   const { id } = useParams();
   let requestID: number | undefined;
 
@@ -185,40 +187,14 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
 
   const request = requestList ? requestList.find((request) => request.id === requestID) : undefined;
 
-  const schema = yup
-    .object({
-      comment: yup.string().required('Cant post empty comment.').min(10, 'Comment must be at least 10 characters.'),
-    })
-    .required();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-  } = useForm({
-    resolver: yupResolver(schema),
-    defaultValues: {
-      comment: '',
-    },
-  });
-
-  const newComment = watch('comment') || '';
-  const maxChars = 225;
-  const charsLeft = maxChars - newComment.length;
-
-  const onSubmit = (data: { comment: string }) => {
+  const onSubmitNewComment = (data: { comment: string }) => {
+    console.log('działa');
     if (request) {
       onAddNewComment(request.id, data.comment as string);
-      setValue('comment', '');
+      data.comment = '';
     } else {
       console.error('Request is undefined.');
     }
-  };
-
-  const handleTextChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setValue('comment', event.target.value, { shouldValidate: true });
   };
 
   const navigate = useNavigate();
@@ -227,16 +203,21 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
     navigate(-1);
   };
 
-  type ReplyBoxState = {
-    parentID: number | null;
-    childIndex?: number | null;
-    type: 'comment' | 'reply' | null;
+  const [activeReply, setActiveReply] = useState<{ commentId: number; replyTo: string; replyId: number | undefined } | null>(null);
+
+  const handleCommentReply = (commentId: number, replyTo: string, replyId: number | undefined) => {
+    setActiveReply({ commentId, replyTo, replyId });
   };
 
-  const [activeReplyBox, setActiveReplyBox] = useState<ReplyBoxState>({ parentID: null, childIndex: null, type: null });
-
-  const handleReplyClick = (parentID: number | null, childIndex: number | null = null, type: 'comment' | 'reply' | null) => {
-    setActiveReplyBox({ parentID, childIndex, type });
+  const onSubmitReply = (data: { reply: string }) => {
+    if (request && activeReply) {
+      const { commentId, replyTo } = activeReply;
+      onAddReply(request.id, commentId, data.reply, replyTo);
+      setActiveReply(null);
+      console.log('hey huje');
+    } else {
+      console.error('Request or active reply is undefined');
+    }
   };
 
   return (
@@ -252,68 +233,23 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
               <EditFeedbackButton>Edit Feedback</EditFeedbackButton>
             </ProductRequestNavbar>
             <RequestDetailsAndCommentsContainer>
-              <RequestSingleElement request={request} />
+              <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
               <CommentsContainer>
-                <CommentNumber>{request.comments?.length ?? 0} Comments</CommentNumber>
+                <CommentNumber>{calculateCommentNumbers(request)} Comments</CommentNumber>
                 {request.comments?.map((comment) => (
                   <SingleCommentContainer key={comment.id}>
-                    <CommentHeader>
-                      <UserInfoContainer>
-                        <UserImage src={comment.user.image} />
-                        <div style={{ height: '40px' }}>
-                          <UserName>{comment.user.name}</UserName>
-                          <UserNickName>@{comment.user.username}</UserNickName>
-                        </div>
-                      </UserInfoContainer>
-                      <ReplyButton onClick={() => handleReplyClick(comment.id, null, 'comment')}>Reply</ReplyButton>
-                    </CommentHeader>
-                    <CommentContent>{comment.content}</CommentContent>
-                    {activeReplyBox.parentID === comment.id && activeReplyBox.type === 'comment' && (
-                      <TextAreaContainer>
-                        <TextAreaCommentReply />
-                        <PrimaryButton> Post Reply</PrimaryButton>
-                      </TextAreaContainer>
-                    )}
+                    <SingleReply comment={comment} handleCommentReply={handleCommentReply} isComment={true} />
+                    {activeReply?.commentId === comment.id && activeReply?.replyId === 0 && <ReplyForm onSubmitReply={onSubmitReply} />}
                     {comment?.replies?.map((reply, index) => (
-                      <SingleReplyContainer key={`${comment.id}-${reply.user.username}-${index}`} isFirstChild={index === 0}>
-                        <CommentHeader>
-                          <UserInfoContainer>
-                            <UserImage src={reply.user.image} />
-                            <div style={{ height: '40px' }}>
-                              <UserName>{reply.user.name}</UserName>
-                              <UserNickName>@{reply.user.username}</UserNickName>
-                            </div>
-                          </UserInfoContainer>
-                          <ReplyButton onClick={() => handleReplyClick(comment.id, index, 'reply')}>Reply</ReplyButton>
-                        </CommentHeader>
-                        <CommentContent>
-                          <ReplyTo>@{reply.replyingTo}</ReplyTo>
-                          {reply.content}
-                        </CommentContent>
-                        {activeReplyBox.parentID === comment.id && activeReplyBox.childIndex === index && activeReplyBox.type === 'reply' && (
-                          <TextAreaContainer>
-                            <TextAreaCommentReply />
-                            <PrimaryButton> Post Reply</PrimaryButton>
-                          </TextAreaContainer>
-                        )}
+                      <SingleReplyContainer key={reply.id} isFirstChild={index === 0}>
+                        <SingleReply comment={comment} handleCommentReply={handleCommentReply} isComment={false} reply={reply} />
+                        {activeReply?.commentId === comment.id && activeReply?.replyId === reply?.id && <ReplyForm onSubmitReply={onSubmitReply} />}
                       </SingleReplyContainer>
                     ))}
                   </SingleCommentContainer>
                 ))}
               </CommentsContainer>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <NewCommentContainer>
-                  <CommentNumber>Add Comment</CommentNumber>
-                  <TextAreaContainer style={{ position: 'relative' }}>
-                    <TextAreaCommentReply {...register('comment')} maxLength={maxChars} onChange={handleTextChange} />
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-                      <CharsLeftParagraph>{charsLeft} characters left</CharsLeftParagraph>
-                      <PrimaryButton type="submit"> Post Reply</PrimaryButton>
-                    </div>
-                    {errors.comment && <ErrorParagraph>{errors.comment.message}</ErrorParagraph>}
-                  </TextAreaContainer>
-                </NewCommentContainer>
-              </form>
+              <NewCommentForm onSubmitNewComment={onSubmitNewComment} />
             </RequestDetailsAndCommentsContainer>
           </>
         ) : (

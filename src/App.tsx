@@ -6,20 +6,20 @@ import Header from './components/Header/Header';
 import MainPage from './components/MainPage/MainPage';
 import RequestDetails from './components/RequestDetails/RequestDetails';
 
-import { ProductRequest } from './data/data';
+import { ProductRequest, UserComment } from './data/data';
 
 import { ThemeProvider } from 'styled-components';
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { data } from './data/data';
+import { updatedData } from './data/data';
 
 function App() {
   const [selectedFilter, setSelectedFilter] = useState<string>('Least Upvotes');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
-  const productRequests = data.productRequests;
-  const currentUser = data.currentUser;
+  const productRequests = updatedData.productRequests;
+  const currentUser = updatedData.currentUser;
   const [requestList, setRequestList] = useState<ProductRequest[]>(productRequests);
 
   const handleFilterChange = (filter: string) => {
@@ -31,6 +31,7 @@ function App() {
   };
 
   const addComment = (productRequestID: number, newCommentContent: string) => {
+    console.log('wywołuje');
     const updatedRequestList = requestList.map((request) => {
       if (request.id === productRequestID) {
         const newComment = {
@@ -47,6 +48,44 @@ function App() {
       return request;
     });
     setRequestList(updatedRequestList);
+    console.log('działa xxxx');
+  };
+
+  const calculateCommentNumbers = (request: ProductRequest): number => {
+    if (!request.comments) {
+      return 0;
+    }
+    return request.comments.reduce((total, comment) => {
+      return total + 1 + (comment.replies ? comment.replies.length : 0);
+    }, 0);
+  };
+
+  const addReply = (productRequestID: number, commentID: number, newReplyContent: string, replyingToUsername: string) => {
+    const updatedRequestList = requestList.map((request) => {
+      if (request.id === productRequestID) {
+        const updatedComments = request.comments?.map((comment) => {
+          if (comment.id === commentID) {
+            const newReply = {
+              id: comment.replies ? Math.max(0, ...comment.replies.map((r) => r.id || 0)) + 1 : 1,
+              content: newReplyContent,
+              replyingTo: replyingToUsername,
+              user: currentUser,
+            };
+            return {
+              ...comment,
+              replies: [...(comment?.replies || []), newReply],
+            };
+          }
+          return comment;
+        });
+        return {
+          ...request,
+          comments: updatedComments,
+        };
+      }
+      return request;
+    });
+    setRequestList(updatedRequestList);
   };
 
   return (
@@ -54,14 +93,17 @@ function App() {
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Routes>
-          <Route path="/requests/:id" element={<RequestDetails requestList={requestList} onAddNewComment={addComment} />} />
+          <Route
+            path="/requests/:id"
+            element={<RequestDetails requestList={requestList} onAddNewComment={addComment} onAddReply={addReply} calculateCommentNumbers={calculateCommentNumbers} />}
+          />
           <Route
             path="/"
             element={
               <>
                 <Navbar handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
                 <Header handleFilterChange={handleFilterChange} />
-                <MainPage selectedFilter={selectedFilter} selectedCategory={selectedCategory} requestList={requestList} />
+                <MainPage selectedFilter={selectedFilter} selectedCategory={selectedCategory} requestList={requestList} calculateCommentNumbers={calculateCommentNumbers} />
               </>
             }
           />

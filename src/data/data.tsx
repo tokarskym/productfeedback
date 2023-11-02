@@ -4,13 +4,14 @@ interface User {
   username: string;
 }
 
-interface UserReply {
+export interface UserReply {
   content: string;
+  id?: number;
   replyingTo: string;
   user: User;
 }
 
-interface UserComment {
+export interface UserComment {
   id: number;
   content: string;
   user: User;
@@ -25,7 +26,7 @@ export interface ProductRequest {
   upvotes: number;
   status: 'suggestion' | 'planned' | 'in-progress' | 'live';
   description: string;
-  comments?: UserComment[]; 
+  comments?: UserComment[];
 }
 
 interface Data {
@@ -341,4 +342,30 @@ export const data: Data = {
       ],
     },
   ],
+};
+
+export const updatedData: Data = {
+  ...data,
+  productRequests: data.productRequests.map((request) => ({
+    ...request,
+    comments: request.comments
+      ? request.comments.map((comment) => {
+          let currentMaxId = comment.replies
+            ? comment.replies.reduce((maxId, reply) => {
+                return typeof reply.id === 'number' ? Math.max(maxId, reply.id) : maxId;
+              }, 0)
+            : 0;
+
+          return {
+            ...comment,
+            replies: comment.replies
+              ? comment.replies.map((reply) => ({
+                  ...reply,
+                  id: ++currentMaxId,
+                }))
+              : [],
+          };
+        })
+      : [],
+  })),
 };

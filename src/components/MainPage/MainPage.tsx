@@ -20,9 +20,10 @@ interface MainPageProps {
   selectedFilter: string;
   selectedCategory: string;
   requestList: ProductRequest[];
+  calculateCommentNumbers: (request: ProductRequest) => number;
 }
 
-const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList }) => {
+const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers }) => {
   const productSuggestions = requestList.filter((request) => request.status === 'suggestion');
   const [sortedSuggestions, setSortedSuggestions] = useState<ProductRequest[]>(productSuggestions);
 
@@ -69,7 +70,7 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
       {sortedSuggestions.map((request) => {
         return (
           <Link key={request.id} to={`/requests/${request.id}`}>
-            <RequestSingleElement request={request} />
+            <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
           </Link>
         );
       })}
