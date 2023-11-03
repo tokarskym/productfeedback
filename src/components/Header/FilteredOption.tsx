@@ -32,12 +32,23 @@ interface FilteredOptionProps {
   onChange: (value: string) => void;
 }
 
-const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange }) => (
-  <LabelForOptionInput>
-    <input type="radio" value={value} checked={selectedValue === value} onChange={(e) => onChange(e.target.value)} style={{ display: 'none' }} id="category" />
-    <LabelForOptionInputUI>{label}</LabelForOptionInputUI>
-    {selectedValue === value && <IconCheckImage src={IconCheck} />}
-  </LabelForOptionInput>
-);
+const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange }) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      onChange(value);
+      event.preventDefault();
+
+    }
+  };
+  return (
+    <LabelForOptionInput>
+      <input type="radio" value={value} checked={selectedValue === value} onChange={(e) => onChange(e.target.value)} style={{ display: 'none' }} />
+      <LabelForOptionInputUI onKeyDown={handleKeyDown} tabIndex={0}>
+        {label}
+      </LabelForOptionInputUI>
+      {selectedValue === value && <IconCheckImage src={IconCheck} />}
+    </LabelForOptionInput>
+  );
+};
 
 export default FilteredOption;

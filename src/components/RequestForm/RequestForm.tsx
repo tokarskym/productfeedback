@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import BackButton from '../BackButton/BackButton';
 
-import { Container } from '../GlobalStyles/ReusedStyles';
+import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
 import NewFeedbackSVG from '../../images/shared/icon-new-feedback.svg';
 import BlueArrowUpSVG from '../../images/shared/icon-arrow-up-blue.svg';
 import BlueArrowDownSVG from '../../images/shared/icon-arrow-down-blue.svg';
@@ -65,6 +65,9 @@ const FeedbackTitleInput = styled.input`
   border: none;
   outline: none;
   border-radius: 8px;
+  &:focus {
+    outline: 0.5px solid #4661e6;
+  }
 `;
 
 const FormFieldWrapper = styled.div`
@@ -74,18 +77,21 @@ const FormFieldWrapper = styled.div`
   margin-bottom: 15px;
 `;
 
-const SelectedCategoryButtonInput = styled.button`
+const SelectedCategoryButtonInput = styled.button<{ isHighlighted: boolean }>`
   width: 100%;
   height: 48px;
   background-color: #f7f8fd;
   font-size: 13px;
   color: #3a4374;
-  border: none;
+  border: ${(props) => (props.isHighlighted ? '0.5px solid #4661e6' : 'none')};
   border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 5px 10px;
+  &:focus {
+    outline: 0.5px solid #4661e6;
+  }
 `;
 
 const CategoryModal = styled.div`
@@ -96,7 +102,7 @@ const CategoryModal = styled.div`
   z-index: 1;
   background-color: white;
   box-shadow: rgba(72, 84, 159, 0.25) 0px 10px 20px 0px;
-  bottom: -23 0px;
+  bottom: -230px;
 `;
 
 const FeedbackDetailInput = styled.textarea`
@@ -111,8 +117,21 @@ const FeedbackDetailInput = styled.textarea`
   resize: none;
   border: none;
   &:focus {
-    outline: none;
+    outline: 0.5px solid #4661e6;
   }
+`;
+
+const ButtonsDiv = styled.div`
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 15px;
+`;
+
+const CancelButton = styled(PrimaryButton)`
+  background-color: ${(props) => props.theme.colors.darkerDarkBlue};
 `;
 
 const RequestForm: React.FC = () => {
@@ -134,6 +153,13 @@ const RequestForm: React.FC = () => {
   const handleCategoryChange = (value: string) => {
     setSelectedCategory(value);
     setIsCategoryModalOpen(!categoryModalOpen);
+    setSelectMenuHighlighted(false);
+  };
+
+  const [selectMenuHighlighted, setSelectMenuHighlighted] = useState(false);
+
+  const fakeLabelFunctionality = () => {
+    setSelectMenuHighlighted(!selectMenuHighlighted);
   };
 
   return (
@@ -149,9 +175,9 @@ const RequestForm: React.FC = () => {
             <FeedbackTitleInput id="feedbackTitle" />
           </FormFieldWrapper>
           <FormFieldWrapper style={{ position: 'relative' }}>
-            <FormFieldLabel htmlFor="category">Category</FormFieldLabel>
+            <FormFieldLabel onClick={fakeLabelFunctionality}>Category</FormFieldLabel>
             <FormFieldDescription>Choose a category for your feedback</FormFieldDescription>
-            <SelectedCategoryButtonInput onClick={openCategoryModal}>
+            <SelectedCategoryButtonInput onClick={openCategoryModal} isHighlighted={selectMenuHighlighted}>
               {capitalizeFirstLetter(selectedCategory)}
               <img src={categoryModalOpen ? BlueArrowUpSVG : BlueArrowDownSVG} alt={categoryModalOpen ? 'Arrow Up' : 'Arrow Down'} />
             </SelectedCategoryButtonInput>
@@ -174,6 +200,10 @@ const RequestForm: React.FC = () => {
             <FormFieldDescription>Include any specific comments on what should be improved, added, etc.</FormFieldDescription>
             <FeedbackDetailInput id="description" />
           </FormFieldWrapper>
+          <ButtonsDiv>
+            <CancelButton>Cancel</CancelButton>
+            <PrimaryButton>Add Feedback</PrimaryButton>
+          </ButtonsDiv>
         </NewRequestForm>
       </RequestFormContainer>
     </>
