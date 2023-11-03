@@ -35,9 +35,9 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
     } else if (selectedFilter === 'Least Upvotes') {
       newSortedSuggestions.sort((a, b) => a.upvotes - b.upvotes);
     } else if (selectedFilter === 'Most Comments') {
-      newSortedSuggestions.sort((a, b) => (b?.comments?.length || 0) - (a?.comments?.length || 0));
+      newSortedSuggestions.sort((a, b) => calculateCommentNumbers(b) - calculateCommentNumbers(a));
     } else if (selectedFilter === 'Least Comments') {
-      newSortedSuggestions.sort((a, b) => (a?.comments?.length || 0) - (b?.comments?.length || 0));
+      newSortedSuggestions.sort((a, b) => calculateCommentNumbers(a) - calculateCommentNumbers(b));
     }
     setSortedSuggestions(newSortedSuggestions);
   }, [selectedFilter]);

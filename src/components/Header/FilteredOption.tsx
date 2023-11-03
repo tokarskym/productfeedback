@@ -34,7 +34,7 @@ interface FilteredOptionProps {
 
 const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange }) => (
   <LabelForOptionInput>
-    <input type="radio" value={value} checked={selectedValue === value} onChange={(e) => onChange(e.target.value)} style={{ display: 'none' }} />
+    <input type="radio" value={value} checked={selectedValue === value} onChange={(e) => onChange(e.target.value)} style={{ display: 'none' }} id="category" />
     <LabelForOptionInputUI>{label}</LabelForOptionInputUI>
     {selectedValue === value && <IconCheckImage src={IconCheck} />}
   </LabelForOptionInput>

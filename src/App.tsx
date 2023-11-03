@@ -5,14 +5,16 @@ import Navbar from './components/Navbar/Navbar';
 import Header from './components/Header/Header';
 import MainPage from './components/MainPage/MainPage';
 import RequestDetails from './components/RequestDetails/RequestDetails';
+import RequestForm from './components/RequestForm/RequestForm';
 
-import { ProductRequest, UserComment } from './data/data';
+import { ProductRequest } from './data/data';
 
 import { ThemeProvider } from 'styled-components';
 import { useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { updatedData } from './data/data';
+
 
 function App() {
   const [selectedFilter, setSelectedFilter] = useState<string>('Least Upvotes');
@@ -97,12 +99,13 @@ function App() {
             path="/requests/:id"
             element={<RequestDetails requestList={requestList} onAddNewComment={addComment} onAddReply={addReply} calculateCommentNumbers={calculateCommentNumbers} />}
           />
+          <Route path="/requests/:id/new" element={<RequestForm />} />
           <Route
             path="/"
             element={
               <>
                 <Navbar handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-                <Header handleFilterChange={handleFilterChange} />
+                <Header handleFilterChange={handleFilterChange} requestList={requestList} />
                 <MainPage selectedFilter={selectedFilter} selectedCategory={selectedCategory} requestList={requestList} calculateCommentNumbers={calculateCommentNumbers} />
               </>
             }

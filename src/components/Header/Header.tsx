@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 
 import { HeaderBar, FilterDiv, FilterButton, FilterModal, HorizontalRule, ButtonAndModalContainer } from './HeaderStyles';
 import { PrimaryButton } from '../GlobalStyles/ReusedStyles';
@@ -7,12 +8,14 @@ import ArrowDown from '../../images/shared/icon-arrow-down.svg';
 import ArrowUp from '../../images/shared/icon-arrow-up.svg';
 
 import FilteredOption from './FilteredOption';
+import { ProductRequest } from '../../data/data';
 
 interface HeaderProps {
   handleFilterChange: (filter: string) => void;
+  requestList: ProductRequest[];
 }
 
-const Header: React.FC<HeaderProps> = ({ handleFilterChange }) => {
+const Header: React.FC<HeaderProps> = ({ handleFilterChange, requestList }) => {
   const [filterModalOpen, setIsFilterModalOpen] = useState<boolean>(false);
   const [selectedOption, setSelectedOption] = useState<string>('Least Upvotes');
 
@@ -24,6 +27,13 @@ const Header: React.FC<HeaderProps> = ({ handleFilterChange }) => {
     setSelectedOption(value);
     handleFilterChange(value);
     setIsFilterModalOpen(!filterModalOpen);
+  };
+
+  const navigate = useNavigate();
+
+  const createNewRequest = () => {
+    const newID = requestList.length + 1;
+    navigate(`/requests/${newID}/new`);
   };
 
   return (
@@ -47,7 +57,7 @@ const Header: React.FC<HeaderProps> = ({ handleFilterChange }) => {
             </FilterModal>
           )}
         </ButtonAndModalContainer>
-        <PrimaryButton>+ Add Feedback</PrimaryButton>
+        <PrimaryButton onClick={createNewRequest}>+ Add Feedback</PrimaryButton>
       </FilterDiv>
     </HeaderBar>
   );

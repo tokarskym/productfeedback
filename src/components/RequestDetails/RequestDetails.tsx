@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 import { ProductRequest } from '../../data/data';
-import ReturnButtonSVG from '../../images/shared//icon-arrow-left.svg';
 
 import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
 import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
@@ -13,6 +11,7 @@ import React, { useState } from 'react';
 import SingleReply from './SingleReply';
 import ReplyForm from './ReplyForm';
 import NewCommentForm from './NewCommentForm';
+import BackButton from '../BackButton/BackButton';
 
 export const ProductRequestNavbar = styled(Container)`
   display: flex;
@@ -197,12 +196,6 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
     }
   };
 
-  const navigate = useNavigate();
-
-  const handleReturn = () => {
-    navigate(-1);
-  };
-
   const [activeReply, setActiveReply] = useState<{ commentId: number; replyTo: string; replyId: number | undefined } | null>(null);
 
   const handleCommentReply = (commentId: number, replyTo: string, replyId: number | undefined) => {
@@ -225,13 +218,7 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
       <>
         {request ? (
           <>
-            <ProductRequestNavbar>
-              <ReturnButton onClick={handleReturn}>
-                <img src={ReturnButtonSVG} alt="Arrow Left / Go Back" />
-                Go Back
-              </ReturnButton>
-              <EditFeedbackButton>Edit Feedback</EditFeedbackButton>
-            </ProductRequestNavbar>
+            <BackButton isEdit={true} />
             <RequestDetailsAndCommentsContainer>
               <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
               <CommentsContainer>
