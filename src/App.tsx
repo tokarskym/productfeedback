@@ -10,11 +10,10 @@ import RequestForm from './components/RequestForm/RequestForm';
 import { ProductRequest } from './data/data';
 
 import { ThemeProvider } from 'styled-components';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { updatedData } from './data/data';
-
 
 function App() {
   const [selectedFilter, setSelectedFilter] = useState<string>('Least Upvotes');
@@ -90,6 +89,12 @@ function App() {
     setRequestList(updatedRequestList);
   };
 
+  const handleAddProductRequest = (newProductRequest: ProductRequest) => {
+    const updatedProductRequests: ProductRequest[] = [...requestList, newProductRequest];
+    setRequestList(updatedProductRequests);
+    console.log(updatedProductRequests);
+  };
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -99,7 +104,7 @@ function App() {
             path="/requests/:id"
             element={<RequestDetails requestList={requestList} onAddNewComment={addComment} onAddReply={addReply} calculateCommentNumbers={calculateCommentNumbers} />}
           />
-          <Route path="/requests/:id/new" element={<RequestForm />} />
+          <Route path="/requests/:id/new" element={<RequestForm handleAddProductRequest={handleAddProductRequest} />} />
           <Route
             path="/"
             element={

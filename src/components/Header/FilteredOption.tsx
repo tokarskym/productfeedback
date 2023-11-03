@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 import IconCheck from '../../images/shared/icon-check.svg';
+import { UseFormRegister } from 'react-hook-form';
+import { FormValues } from '../RequestForm/RequestForm';
 
 const LabelForOptionInput = styled.label`
   display: flex;
@@ -30,22 +32,20 @@ interface FilteredOptionProps {
   value: string;
   selectedValue: string;
   onChange: (value: string) => void;
+  register?: UseFormRegister<FormValues>;
 }
 
-const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange }) => {
+const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange, register }) => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       onChange(value);
       event.preventDefault();
-
     }
   };
   return (
-    <LabelForOptionInput>
-      <input type="radio" value={value} checked={selectedValue === value} onChange={(e) => onChange(e.target.value)} style={{ display: 'none' }} />
-      <LabelForOptionInputUI onKeyDown={handleKeyDown} tabIndex={0}>
-        {label}
-      </LabelForOptionInputUI>
+    <LabelForOptionInput onKeyDown={handleKeyDown} tabIndex={0}>
+      <input type="radio" value={value} checked={selectedValue === value} onClick={() => onChange(value)} style={{ display: 'none' }} {...(register && register('category'))} />
+      <LabelForOptionInputUI>{label}</LabelForOptionInputUI>
       {selectedValue === value && <IconCheckImage src={IconCheck} />}
     </LabelForOptionInput>
   );

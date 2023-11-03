@@ -28,6 +28,11 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
   const [sortedSuggestions, setSortedSuggestions] = useState<ProductRequest[]>(productSuggestions);
 
   useEffect(() => {
+    const newProductSuggestions = requestList.filter((request) => request.status === 'suggestion');
+    setSortedSuggestions(newProductSuggestions);
+  }, [requestList]);
+
+  useEffect(() => {
     const newSortedSuggestions = [...sortedSuggestions];
 
     if (selectedFilter === 'Most Upvotes') {
@@ -43,7 +48,7 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
   }, [selectedFilter]);
 
   useEffect(() => {
-    const newSortedSuggestions = [...productSuggestions];
+    const newSortedSuggestions = [...sortedSuggestions];
 
     if (selectedCategory === 'All') {
       setSortedSuggestions([...productSuggestions]);
@@ -57,10 +62,10 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
       const featureSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
       setSortedSuggestions(featureSuggestions);
     } else if (selectedCategory === 'UX') {
-      const uxSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      const uxSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toUpperCase());
       setSortedSuggestions(uxSuggestion);
     } else if (selectedCategory === 'UI') {
-      const uiSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
+      const uiSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toUpperCase());
       setSortedSuggestions(uiSuggestion);
     }
   }, [selectedCategory]);
