@@ -33,9 +33,10 @@ interface FilteredOptionProps {
   selectedValue: string;
   onChange: (value: string) => void;
   register?: UseFormRegister<FormValues>;
+  type?: string;
 }
 
-const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange, register }) => {
+const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange, register, type }) => {
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
       onChange(value);
@@ -44,7 +45,14 @@ const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedV
   };
   return (
     <LabelForOptionInput onKeyDown={handleKeyDown} tabIndex={0}>
-      <input type="radio" value={value} checked={selectedValue === value} onClick={() => onChange(value)} style={{ display: 'none' }} {...(register && register('category'))} />
+      <input
+        type="radio"
+        value={value}
+        checked={selectedValue === value}
+        onClick={() => onChange(value)}
+        style={{ display: 'none' }}
+        {...(register && (type === 'category' ? register('category') : register('status')))}
+      />
       <LabelForOptionInputUI>{label}</LabelForOptionInputUI>
       {selectedValue === value && <IconCheckImage src={IconCheck} />}
     </LabelForOptionInput>

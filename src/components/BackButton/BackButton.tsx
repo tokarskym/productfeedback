@@ -6,12 +6,18 @@ import ReturnButtonSVG from '../../images/shared//icon-arrow-left.svg';
 
 interface BackButtonProps {
   isEdit: boolean;
+  requestID?: number;
 }
-const BackButton: React.FC<BackButtonProps> = ({ isEdit }) => {
+const BackButton: React.FC<BackButtonProps> = ({ isEdit, requestID }) => {
   const navigate = useNavigate();
 
   const handleReturn = () => {
     navigate(-1);
+  };
+
+  const editRequest = () => {
+    const editedRequestID = requestID;
+    navigate(`/requests/${editedRequestID}/edit`);
   };
 
   return (
@@ -20,7 +26,7 @@ const BackButton: React.FC<BackButtonProps> = ({ isEdit }) => {
         <img src={ReturnButtonSVG} alt="Arrow Left / Go Back" />
         Go Back
       </ReturnButton>
-      {isEdit && <EditFeedbackButton>Edit Feedback</EditFeedbackButton>}
+      {isEdit && <EditFeedbackButton onClick={editRequest}>Edit Feedback</EditFeedbackButton>}
     </ProductRequestNavbar>
   );
 };

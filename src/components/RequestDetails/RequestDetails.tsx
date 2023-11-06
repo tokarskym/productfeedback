@@ -218,7 +218,7 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
       <>
         {request ? (
           <>
-            <BackButton isEdit={true} />
+            <BackButton isEdit={true} requestID={request.id} />
             <RequestDetailsAndCommentsContainer>
               <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
               <CommentsContainer>

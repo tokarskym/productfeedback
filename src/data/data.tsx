@@ -22,9 +22,9 @@ export interface UserComment {
 export interface ProductRequest {
   id: number;
   title: string;
-  category: 'enhancement' | 'feature' | 'bug';
+  category: string; // 'enhancement' | 'feature' | 'bug' | 'UX' | 'UI';
   upvotes: number;
-  status: 'suggestion' | 'planned' | 'in-progress' | 'live';
+  status: string; // 'suggestion' | 'planned' | 'in-progress' | 'live';
   description: string;
   comments?: UserComment[];
 }

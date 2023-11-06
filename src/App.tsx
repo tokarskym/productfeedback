@@ -95,6 +95,26 @@ function App() {
     console.log(updatedProductRequests);
   };
 
+  const handleDeleteProductRequest = (id: number) => {
+    const updatedProductRequests = productRequests.filter((request) => request.id !== id);
+    setRequestList(updatedProductRequests);
+  };
+
+  const handleEditProductRequest = (updatedProductRequest: ProductRequest, data: any) => {
+    const updatedProductRequests = requestList.map((request) => {
+      if (request.id === updatedProductRequest.id) {
+        return {
+          ...updatedProductRequest,
+          ...data,
+        };
+      } else {
+        return request;
+      }
+    });
+    setRequestList(updatedProductRequests);
+    console.log('After update:', updatedProductRequests);
+  };
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -104,7 +124,30 @@ function App() {
             path="/requests/:id"
             element={<RequestDetails requestList={requestList} onAddNewComment={addComment} onAddReply={addReply} calculateCommentNumbers={calculateCommentNumbers} />}
           />
-          <Route path="/requests/:id/new" element={<RequestForm handleAddProductRequest={handleAddProductRequest} />} />
+          <Route
+            path="/requests/:id/new"
+            element={
+              <RequestForm
+                handleDeleteProductRequest={handleDeleteProductRequest}
+                handleEditProductRequest={handleEditProductRequest}
+                handleAddProductRequest={handleAddProductRequest}
+                mode="new"
+                requestList={requestList}
+              />
+            }
+          />
+          <Route
+            path="/requests/:id/edit"
+            element={
+              <RequestForm
+                handleDeleteProductRequest={handleDeleteProductRequest}
+                handleEditProductRequest={handleEditProductRequest}
+                handleAddProductRequest={handleAddProductRequest}
+                mode="edit"
+                requestList={requestList}
+              />
+            }
+          />
           <Route
             path="/"
             element={

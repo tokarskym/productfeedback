@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { HorizontalRule } from '../Header/HeaderStyles';
 import { capitalizeFirstLetter } from '../../Utils/Functions';
 
-import { useForm } from 'react-hook-form';
+import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { ProductRequest } from '../../data/data';
@@ -127,32 +127,42 @@ const FeedbackDetailInput = styled.textarea`
   }
 `;
 
-const ButtonsDiv = styled.div`
+const ButtonsDiv = styled.div<{ isDelete: boolean }>`
   width: 100%;
   height: auto;
   display: flex;
-  justify-content: flex-end;
+  justify-content: ${(props) => (props.isDelete ? 'space-between' : 'flex-end')};
   align-items: center;
-  gap: 15px;
 `;
 
 const CancelButton = styled(PrimaryButton)`
   background-color: ${(props) => props.theme.colors.darkerDarkBlue};
+  margin-right: 15px;
+`;
+
+const DeleteButton = styled(PrimaryButton)`
+  background-color: #d73737;
+  display: flex;
 `;
 
 export interface FormValues {
   title: string;
   category: string;
   description: string;
-  id?: number | null;
-  status?: string | null;
-  upvotes?: number | null;
+  id: number;
+  status: string;
+  upvotes: number;
 }
 
 interface RequestFormProps {
   handleAddProductRequest: (newProductRequest: ProductRequest) => void;
+  mode: string;
+  requestList: ProductRequest[];
+  handleDeleteProductRequest: (id: number) => void;
+  handleEditProductRequest: (data: any, updatedProductRequest: ProductRequest) => void;
 }
-const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest }) => {
+
+const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode, requestList, handleDeleteProductRequest, handleEditProductRequest }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const productID = Number(id);
@@ -162,56 +172,86 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest }) =>
       title: yup.string().required('Title is required'),
       category: yup.string().required('Category is required'),
       description: yup.string().required('Description is required'),
-      id: yup.number().nullable(),
-      status: yup.string().nullable(),
-      upvotes: yup.number().nullable(),
+      id: yup.number().required(),
+      status: yup.string().required(),
+      upvotes: yup.number().required(),
     })
     .required();
+
+  const requestToEdit: ProductRequest | undefined = requestList ? requestList.find((request) => request.id === productID) : undefined;
 
   const {
     register,
     handleSubmit,
     setValue,
+    watch,
     formState: { errors },
   } = useForm<FormValues>({
     resolver: yupResolver(formValidation),
     defaultValues: {
-      title: '',
-      category: '',
-      description: '',
+      title: mode === 'edit' ? requestToEdit?.title : '',
+      category: mode === 'edit' ? requestToEdit?.category : 'Feature',
+      description: mode === 'edit' ? requestToEdit?.description : '',
       id: productID,
-      upvotes: 0,
-      status: 'suggestion',
+      upvotes: mode === 'edit' ? requestToEdit?.upvotes : 0,
+      status: mode === 'edit' ? requestToEdit?.status : 'suggestion',
     },
   });
 
-  // CREATING USE STATE FOR HOLDING SELECTED OPTION AND SHOWING IT IN THE CATEGORY BUTTON
-  const [selectedCategory, setSelectedCategory] = useState<string>('Feature');
+  //
   const [categoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
+  const [statusModalOpen, setIsStatusModalOpen] = useState<boolean>(false);
 
   const openCategoryModal = (event: any) => {
     setIsCategoryModalOpen(!categoryModalOpen);
+    setIsStatusModalOpen(false);
     console.log('works!!');
   };
 
+  const openStatusModal = (event: any) => {
+    setIsStatusModalOpen(!statusModalOpen);
+    setIsCategoryModalOpen(false);
+    console.log('open model of status');
+  };
+
   const handleCategoryChange = (value: string) => {
-    setSelectedCategory(value);
     setIsCategoryModalOpen(!categoryModalOpen);
     setSelectMenuHighlighted(false);
     setValue('category', value);
   };
 
+  const handleStatusChange = (value: string) => {
+    setIsStatusModalOpen(!statusModalOpen);
+    setSelectMenuHighlighted(false);
+    setValue('status', value);
+  };
   const [selectMenuHighlighted, setSelectMenuHighlighted] = useState(false);
 
   const fakeLabelFunctionality = () => {
     setSelectMenuHighlighted(!selectMenuHighlighted);
   };
+
   // SUBMITING
 
-  const onSubmit = (data: any) => {
-    handleAddProductRequest(data);
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const updatedRequest = requestToEdit; // Użyj `requestToEdit` zdefiniowanego wcześniej w zakresie.
+    if (mode === 'edit' && updatedRequest) {
+      handleEditProductRequest(updatedRequest, data);
+      console.log('udaje się editing');
+    } else {
+      handleAddProductRequest(data);
+      console.log('udaje sie adding');
+    }
     navigate(-1);
   };
+
+  const onDeleteProductRequest = (id: number) => {
+    handleDeleteProductRequest(id);
+    navigate(-2);
+  };
+
+  const selectedCategory = watch('category');
+  const selectedStatus: string = watch('status');
 
   return (
     <>
@@ -219,7 +259,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest }) =>
       <RequestFormContainer>
         <NewRequestForm>
           <NewFeedbackIcon src={NewFeedbackSVG} />
-          <RequestFormHeader>Create New Feedback</RequestFormHeader>
+          <RequestFormHeader>{mode === 'edit' ? `Editing '${requestToEdit?.title}'` : 'Create New Feedback'} </RequestFormHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormFieldWrapper>
               <FormFieldLabel htmlFor="feedbackTitle">Feedback Title</FormFieldLabel>
@@ -229,32 +269,69 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest }) =>
             <FormFieldWrapper style={{ position: 'relative' }}>
               <FormFieldLabel onClick={fakeLabelFunctionality}>Category</FormFieldLabel>
               <FormFieldDescription>Choose a category for your feedback</FormFieldDescription>
-              <SelectedCategoryButtonInput onClick={openCategoryModal} isHighlighted={selectMenuHighlighted}>
+              <SelectedCategoryButtonInput onClick={openCategoryModal} isHighlighted={selectMenuHighlighted} type="button">
                 {capitalizeFirstLetter(selectedCategory)}
                 <img src={categoryModalOpen ? BlueArrowUpSVG : BlueArrowDownSVG} alt={categoryModalOpen ? 'Arrow Up' : 'Arrow Down'} />
               </SelectedCategoryButtonInput>
               {categoryModalOpen && (
-                <CategoryModal id="category">
-                  <FilteredOption label="Feature" value="feature" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} />
+                <CategoryModal>
+                  <FilteredOption label="Feature" value="feature" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="Bug" value="bug" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} />
+                  <FilteredOption label="Bug" value="bug" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="Enhancement" value="enhancement" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} />
+                  <FilteredOption label="Enhancement" value="enhancement" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="UX" value="UX" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} />
+                  <FilteredOption label="UX" value="UX" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="UI" value="UI" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} />
+                  <FilteredOption label="UI" value="UI" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
                 </CategoryModal>
               )}
             </FormFieldWrapper>
+            {mode === 'edit' && (
+              <>
+                <FormFieldWrapper>
+                  <FormFieldLabel onClick={fakeLabelFunctionality}>Update Status</FormFieldLabel>
+                  <FormFieldDescription>Change {selectedCategory} state</FormFieldDescription>
+                  <SelectedCategoryButtonInput onClick={openStatusModal} isHighlighted={selectMenuHighlighted} type="button">
+                    {capitalizeFirstLetter(selectedStatus)}
+                    <img src={statusModalOpen ? BlueArrowUpSVG : BlueArrowDownSVG} alt={statusModalOpen ? 'Arrow Up' : 'Arrow Down'} />
+                  </SelectedCategoryButtonInput>
+                </FormFieldWrapper>
+                {statusModalOpen && (
+                  <FormFieldWrapper style={{ position: 'relative' }}>
+                    <CategoryModal style={{ bottom: '-170px' }}>
+                      <FilteredOption label="Suggestion " value="suggestion" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <HorizontalRule />
+                      <FilteredOption label="Planned" value="planned" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <HorizontalRule />
+                      <FilteredOption label="In-Progress" value="in-progress" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <HorizontalRule />
+                      <FilteredOption label="Live" value="live" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                    </CategoryModal>
+                  </FormFieldWrapper>
+                )}
+              </>
+            )}
+
             <FormFieldWrapper>
               <FormFieldLabel htmlFor="description">Feedback Detail</FormFieldLabel>
               <FormFieldDescription>Include any specific comments on what should be improved, added, etc.</FormFieldDescription>
               <FeedbackDetailInput id="description" {...register('description')} disabled={categoryModalOpen} />
             </FormFieldWrapper>
-            <ButtonsDiv>
-              <CancelButton>Cancel</CancelButton>
-              <PrimaryButton type="submit">Add Feedback</PrimaryButton>
+            <ButtonsDiv isDelete={mode === 'edit'}>
+              {mode === 'edit' && (
+                <div>
+                  <DeleteButton onClick={() => onDeleteProductRequest(productID)} type="button">
+                    Delete
+                  </DeleteButton>
+                </div>
+              )}
+              <div>
+                <CancelButton onClick={() => navigate(-1)} type="button">
+                  Cancel
+                </CancelButton>
+                <PrimaryButton type="submit">{mode === 'edit' ? 'Save Changes' : 'Add Feedback'}</PrimaryButton>
+              </div>
             </ButtonsDiv>
           </form>
         </NewRequestForm>
