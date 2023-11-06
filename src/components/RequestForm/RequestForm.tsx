@@ -83,13 +83,13 @@ const FormFieldWrapper = styled.div`
   margin-bottom: 15px;
 `;
 
-const SelectedCategoryButtonInput = styled.button<{ isHighlighted: boolean }>`
+const SelectedCategoryButtonInput = styled.button<{ $isHighlighted: boolean }>`
   width: 100%;
   height: 48px;
   background-color: #f7f8fd;
   font-size: 13px;
   color: #3a4374;
-  border: ${(props) => (props.isHighlighted ? '0.5px solid #4661e6' : 'none')};
+  border: ${(props) => (props.$isHighlighted ? '0.5px solid #4661e6' : 'none')};
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -127,11 +127,11 @@ const FeedbackDetailInput = styled.textarea`
   }
 `;
 
-const ButtonsDiv = styled.div<{ isDelete: boolean }>`
+const ButtonsDiv = styled.div<{ $isDelete: boolean }>`
   width: 100%;
   height: auto;
   display: flex;
-  justify-content: ${(props) => (props.isDelete ? 'space-between' : 'flex-end')};
+  justify-content: ${(props) => (props.$isDelete ? 'space-between' : 'flex-end')};
   align-items: center;
 `;
 
@@ -269,7 +269,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
             <FormFieldWrapper style={{ position: 'relative' }}>
               <FormFieldLabel onClick={fakeLabelFunctionality}>Category</FormFieldLabel>
               <FormFieldDescription>Choose a category for your feedback</FormFieldDescription>
-              <SelectedCategoryButtonInput onClick={openCategoryModal} isHighlighted={selectMenuHighlighted} type="button">
+              <SelectedCategoryButtonInput onClick={openCategoryModal} $isHighlighted={selectMenuHighlighted} type="button">
                 {capitalizeFirstLetter(selectedCategory)}
                 <img src={categoryModalOpen ? BlueArrowUpSVG : BlueArrowDownSVG} alt={categoryModalOpen ? 'Arrow Up' : 'Arrow Down'} />
               </SelectedCategoryButtonInput>
@@ -292,7 +292,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
                 <FormFieldWrapper>
                   <FormFieldLabel onClick={fakeLabelFunctionality}>Update Status</FormFieldLabel>
                   <FormFieldDescription>Change {selectedCategory} state</FormFieldDescription>
-                  <SelectedCategoryButtonInput onClick={openStatusModal} isHighlighted={selectMenuHighlighted} type="button">
+                  <SelectedCategoryButtonInput onClick={openStatusModal} $isHighlighted={selectMenuHighlighted} type="button">
                     {capitalizeFirstLetter(selectedStatus)}
                     <img src={statusModalOpen ? BlueArrowUpSVG : BlueArrowDownSVG} alt={statusModalOpen ? 'Arrow Up' : 'Arrow Down'} />
                   </SelectedCategoryButtonInput>
@@ -318,7 +318,7 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
               <FormFieldDescription>Include any specific comments on what should be improved, added, etc.</FormFieldDescription>
               <FeedbackDetailInput id="description" {...register('description')} disabled={categoryModalOpen} />
             </FormFieldWrapper>
-            <ButtonsDiv isDelete={mode === 'edit'}>
+            <ButtonsDiv $isDelete={mode === 'edit'}>
               {mode === 'edit' && (
                 <div>
                   <DeleteButton onClick={() => onDeleteProductRequest(productID)} type="button">

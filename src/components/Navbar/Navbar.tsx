@@ -63,11 +63,11 @@ const Navbar: React.FC<NavbarProps> = ({ handleCategoryChange, selectedCategory 
           </HamburgerButton>
         </NavbarContainer>
       </NavbarHeader>
-      <ModalBackground display={isHamburgerOpen}>
+      <ModalBackground $display={isHamburgerOpen}>
         <ModalContainer className={isHamburgerOpen ? 'active' : ''}>
           <TagsContainer>
             {TagsArray.map((tag) => (
-              <ButtonTag isChosen={selectedCategory === tag} key={tag} onClick={() => handleCategoryChange(tag)}>
+              <ButtonTag $isChosen={selectedCategory === tag} key={tag} onClick={() => handleCategoryChange(tag)}>
                 {tag}
               </ButtonTag>
             ))}
@@ -81,7 +81,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleCategoryChange, selectedCategory 
                   return (
                     <li key={status} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
                       <div>
-                        <Dot status={status} />
+                        <Dot $status={status} />
                         <p style={{ display: 'inline-block', color: '#647196 ' }}>{capitalizeFirstLetter(status)}</p>
                       </div>
                       <h4 style={{ color: '#647196' }}>{statusCounts[status]}</h4>

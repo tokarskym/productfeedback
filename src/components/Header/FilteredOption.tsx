@@ -47,6 +47,7 @@ const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedV
     <LabelForOptionInput onKeyDown={handleKeyDown} tabIndex={0}>
       <input
         type="radio"
+        onChange={() => {}}
         value={value}
         checked={selectedValue === value}
         onClick={() => onChange(value)}

@@ -33,7 +33,7 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
   }, [requestList]);
 
   useEffect(() => {
-    const newSortedSuggestions = [...sortedSuggestions];
+    const newSortedSuggestions = [...productSuggestions];
 
     if (selectedFilter === 'Most Upvotes') {
       newSortedSuggestions.sort((a, b) => b.upvotes - a.upvotes);
@@ -48,7 +48,7 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
   }, [selectedFilter]);
 
   useEffect(() => {
-    const newSortedSuggestions = [...sortedSuggestions];
+    const newSortedSuggestions = [...productSuggestions];
 
     if (selectedCategory === 'All') {
       setSortedSuggestions([...productSuggestions]);

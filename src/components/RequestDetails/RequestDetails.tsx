@@ -103,8 +103,9 @@ export const CommentContent = styled.p`
   color: ${(props) => props.theme.colors.gray};
   margin-bottom: 24px;
 `;
+
 export const SingleCommentContainer = styled.div``;
-export const SingleReplyContainer = styled.div<{ isFirstChild: boolean }>`
+export const SingleReplyContainer = styled.div<{ $isFirstChild: boolean }>`
   margin-left: 23px;
   position: relative;
   &::before {
@@ -115,7 +116,7 @@ export const SingleReplyContainer = styled.div<{ isFirstChild: boolean }>`
     bottom: 0;
     width: 1px;
     height: 110%;
-    background-color: ${(props) => (props.isFirstChild ? '#979797' : 'transparent')};
+    background-color: ${(props) => (props.$isFirstChild ? '#979797' : 'transparent')};
     opacity: 0.4;
   }
 `;
@@ -228,7 +229,7 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
                     <SingleReply comment={comment} handleCommentReply={handleCommentReply} isComment={true} />
                     {activeReply?.commentId === comment.id && activeReply?.replyId === 0 && <ReplyForm onSubmitReply={onSubmitReply} />}
                     {comment?.replies?.map((reply, index) => (
-                      <SingleReplyContainer key={reply.id} isFirstChild={index === 0}>
+                      <SingleReplyContainer key={reply.id} $isFirstChild={index === 0}>
                         <SingleReply comment={comment} handleCommentReply={handleCommentReply} isComment={false} reply={reply} />
                         {activeReply?.commentId === comment.id && activeReply?.replyId === reply?.id && <ReplyForm onSubmitReply={onSubmitReply} />}
                       </SingleReplyContainer>

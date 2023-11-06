@@ -37,7 +37,7 @@ export const HamburgerButton = styled.button`
   z-index: 9999;
 `;
 
-export const ModalBackground = styled.div<{ display: boolean }>`
+export const ModalBackground = styled.div<{ $display: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   height: 100%;
   width: 100%;
@@ -45,8 +45,8 @@ export const ModalBackground = styled.div<{ display: boolean }>`
   right: 0;
   top: 0;
   z-index: 9998;
-  visibility: ${(props) => (props.display ? 'visible' : 'hidden')};
-  opacity: ${(props) => (props.display ? 1 : 0)};
+  visibility: ${(props) => (props.$display ? 'visible' : 'hidden')};
+  opacity: ${(props) => (props.$display ? 1 : 0)};
   transition: opacity 0.4s ease-out;
 `;
 
@@ -79,19 +79,19 @@ export const TagsContainer = styled.div`
   column-gap: 5px;
 `;
 
-export const ButtonTag = styled.button<{ isChosen?: boolean }>`
+export const ButtonTag = styled.button<{ $isChosen?: boolean }>`
   padding: 7px 13px;
   width: auto;
   height: auto;
   border: none;
   border-radius: 7px;
-  background-color: ${(props) => (props.isChosen ? props.theme.colors.blue : props.theme.colors.lightGray)};
-  color: ${(props) => (props.isChosen ? props.theme.colors.white : props.theme.colors.blue)};
+  background-color: ${(props) => (props.$isChosen ? props.theme.colors.blue : props.theme.colors.lightGray)};
+  color: ${(props) => (props.$isChosen ? props.theme.colors.white : props.theme.colors.blue)};
   font-weight: 600;
 `;
 
 type DotProps = {
-  status: 'live' | 'planned' | 'in-progress' | 'suggestion';
+  $status: 'live' | 'planned' | 'in-progress' | 'suggestion';
 };
 
 export const Dot = styled.span<DotProps>`
@@ -101,7 +101,7 @@ export const Dot = styled.span<DotProps>`
   border-radius: 50%;
   margin-right: 18px;
   background-color: ${(props) => {
-    switch (props.status) {
+    switch (props.$status) {
       case 'planned':
         return '#F49F85';
       case 'in-progress':

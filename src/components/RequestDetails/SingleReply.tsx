@@ -40,10 +40,10 @@ const SingleReply: React.FC<SingleReplyProps> = ({ comment, handleCommentReply, 
             </UserInfoContainer>
             <ReplyButton onClick={() => handleCommentReply(comment.id, reply.user.username, reply.id)}>Reply</ReplyButton>
           </CommentHeader>
-          <CommentContent>
+          <div>
             <ReplyTo>@{reply.replyingTo}</ReplyTo>
-            {reply.content}
-          </CommentContent>
+            <CommentContent>{reply.content}</CommentContent>
+          </div>
         </>
       ) : null}
     </>
