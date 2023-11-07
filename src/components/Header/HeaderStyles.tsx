@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+
 import { Container } from '../GlobalStyles/ReusedStyles';
 
 export const HeaderBar = styled.div`
@@ -8,7 +9,6 @@ export const HeaderBar = styled.div`
   margin-bottom: 20px;
   position: fixed;
   top: 72px;
-
   & p {
     color: #f2f4fe;
     font-size: 13px;

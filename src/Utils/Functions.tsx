@@ -1,3 +1,4 @@
+
 export const capitalizeFirstLetter = (string: string) => {
   return string.charAt(0).toUpperCase() + string.slice(1);
 };
@@ -14,6 +15,3 @@ export const getColorForStatus = (status: string): string => {
       return 'transparent'; // Default color in case none of the statuses match
   }
 };
-
-
-

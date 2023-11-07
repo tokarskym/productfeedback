@@ -1,20 +1,28 @@
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+
 import ReturnButtonSVG from '../../images/shared//icon-arrow-left-white.svg';
+// STYLES
 
 import { ProductRequestNavbar, ReturnButton } from '../RequestDetails/RequestDetails';
 import { PrimaryButton } from '../GlobalStyles/ReusedStyles';
 
-const ReturnButtonRoadmap = styled(ReturnButton)`
-  color: white;
+const RoadmapNavbar = styled(ProductRequestNavbar)`
+  height: 100px;
+  background-color: #373f68;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-const RoadmapTitle = styled.h3`
-  color: #ffff;
+const ButtonRoadmapWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 `;
 
-interface BackButtonProps {}
-const BackButtonRoadmap: React.FC<BackButtonProps> = () => {
+const BackButtonRoadmap: React.FC = () => {
   const navigate = useNavigate();
 
   const handleReturn = () => {
@@ -22,16 +30,16 @@ const BackButtonRoadmap: React.FC<BackButtonProps> = () => {
   };
 
   return (
-    <ProductRequestNavbar style={{ height: '100px', backgroundColor: '#373F68', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-        <ReturnButtonRoadmap onClick={handleReturn}>
+    <RoadmapNavbar>
+      <ButtonRoadmapWrapper>
+        <ReturnButton style={{ color: 'white' }} onClick={handleReturn}>
           <img src={ReturnButtonSVG} alt="Arrow Left / Go Back" />
           Go Back
-        </ReturnButtonRoadmap>
-        <RoadmapTitle>Roadmap</RoadmapTitle>
-      </div>
+        </ReturnButton>
+        <h3 style={{ color: 'white' }}>Roadmap</h3>
+      </ButtonRoadmapWrapper>
       <PrimaryButton>+Add feedback</PrimaryButton>
-    </ProductRequestNavbar>
+    </RoadmapNavbar>
   );
 };
 

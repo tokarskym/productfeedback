@@ -59,10 +59,12 @@ const UpvotesTag = styled(ButtonTag)`
 const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, calculateCommentNumbers, status }) => {
   return (
     <SingleElement key={request.id} status={request.status}>
-      <div style={{ marginBottom: '10px' }}>
-        <Dot $status={request.status} />
-        <p style={{ display: 'inline-block', color: '#647196 ' }}>{capitalizeFirstLetter(request.status)}</p>
-      </div>
+      {request.status !== 'suggestion' && (
+        <div style={{ marginBottom: '10px' }}>
+          <Dot $status={request.status} />
+          <p style={{ display: 'inline-block', color: '#647196 ' }}>{capitalizeFirstLetter(request.status)}</p>
+        </div>
+      )}
       <RequestTitle>{request.title}</RequestTitle>
       <RequestDescription>{request.description}</RequestDescription>
       <ButtonTag style={{ display: 'block', marginBottom: '10px' }}>{capitalizeFirstLetter(request.category)}</ButtonTag>

@@ -14,6 +14,7 @@ import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
 import { Container } from '../GlobalStyles/ReusedStyles';
 
 import { getColorForStatus } from '../../Utils/Functions';
+import { useCallback, useMemo } from 'react';
 
 interface RoadmapProps {
   statusCounts: CountsType;
@@ -45,13 +46,25 @@ const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateC
 
   const statusButtons = ['planned', 'in-progress', 'live'];
 
-  const setActiveButtonRender = (status: string) => {
-    setButtonActive(status);
-  };
+  const filteredRequests = useMemo(() => {
+    return requestList.filter((request) => request.status === buttonActive);
+  }, [requestList, buttonActive]);
 
-  const productsPlanned = requestList.filter((request) => request.status === 'planned');
-  const productsProgress = requestList.filter((request) => request.status === 'in-progress');
-  const productsLive = requestList.filter((request) => request.status === 'live');
+  const setActiveButtonRender = useCallback((status: string) => {
+    setButtonActive(status);
+  }, []);
+
+  const renderRequestElements = useCallback(
+    (requests: ProductRequest[]) => {
+      return requests.map((request) => (
+        <Link key={request.id} to={`/requests/${request.id}`}>
+          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} />
+        </Link>
+      ));
+    },
+    [calculateCommentNumbers]
+  );
+
 
   return (
     <>
@@ -68,32 +81,7 @@ const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateC
         })}
       </div>
       <HorizontalRule />
-      <ProductRequestsContainer>
-        {buttonActive === 'planned' &&
-          productsPlanned.map((request) => {
-            return (
-              <Link key={request.id} to={`/requests/${request.id}`}>
-                <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} />
-              </Link>
-            );
-          })}
-        {buttonActive === 'live' &&
-          productsLive.map((request) => {
-            return (
-              <Link key={request.id} to={`/requests/${request.id}`}>
-                <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} />
-              </Link>
-            );
-          })}
-        {buttonActive === 'in-progress' &&
-          productsProgress.map((request) => {
-            return (
-              <Link key={request.id} to={`/requests/${request.id}`}>
-                <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} />
-              </Link>
-            );
-          })}
-      </ProductRequestsContainer>
+      <ProductRequestsContainer>{renderRequestElements(filteredRequests)}</ProductRequestsContainer>
     </>
   );
 };

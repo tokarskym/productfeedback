@@ -275,15 +275,22 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
               </SelectedCategoryButtonInput>
               {categoryModalOpen && (
                 <CategoryModal>
-                  <FilteredOption label="Feature" value="feature" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
+                  <FilteredOption label="Feature" value="feature" selectedValue={selectedCategory} onValueChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="Bug" value="bug" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
+                  <FilteredOption label="Bug" value="bug" selectedValue={selectedCategory} onValueChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="Enhancement" value="enhancement" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
+                  <FilteredOption
+                    label="Enhancement"
+                    value="enhancement"
+                    selectedValue={selectedCategory}
+                    onValueChange={handleCategoryChange}
+                    register={register}
+                    type="category"
+                  />
                   <HorizontalRule />
-                  <FilteredOption label="UX" value="UX" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
+                  <FilteredOption label="UX" value="UX" selectedValue={selectedCategory} onValueChange={handleCategoryChange} register={register} type="category" />
                   <HorizontalRule />
-                  <FilteredOption label="UI" value="UI" selectedValue={selectedCategory} onChange={handleCategoryChange} register={register} type="category" />
+                  <FilteredOption label="UI" value="UI" selectedValue={selectedCategory} onValueChange={handleCategoryChange} register={register} type="category" />
                 </CategoryModal>
               )}
             </FormFieldWrapper>
@@ -300,13 +307,13 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
                 {statusModalOpen && (
                   <FormFieldWrapper style={{ position: 'relative' }}>
                     <CategoryModal style={{ bottom: '-170px' }}>
-                      <FilteredOption label="Suggestion " value="suggestion" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <FilteredOption label="Suggestion " value="suggestion" selectedValue={selectedStatus} onValueChange={handleStatusChange} register={register} type="status" />
                       <HorizontalRule />
-                      <FilteredOption label="Planned" value="planned" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <FilteredOption label="Planned" value="planned" selectedValue={selectedStatus} onValueChange={handleStatusChange} register={register} type="status" />
                       <HorizontalRule />
-                      <FilteredOption label="In-Progress" value="in-progress" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <FilteredOption label="In-Progress" value="in-progress" selectedValue={selectedStatus} onValueChange={handleStatusChange} register={register} type="status" />
                       <HorizontalRule />
-                      <FilteredOption label="Live" value="live" selectedValue={selectedStatus} onChange={handleStatusChange} register={register} type="status" />
+                      <FilteredOption label="Live" value="live" selectedValue={selectedStatus} onValueChange={handleStatusChange} register={register} type="status" />
                     </CategoryModal>
                   </FormFieldWrapper>
                 )}

@@ -182,7 +182,7 @@ function App() {
             element={
               <>
                 <Navbar statusCounts={statusCounts} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-                <Header handleFilterChange={handleFilterChange} requestList={requestList} />
+                <Header handleFilterChange={handleFilterChange} requestList={requestList} selectedFilter={selectedFilter} />
                 <MainPage selectedFilter={selectedFilter} selectedCategory={selectedCategory} requestList={requestList} calculateCommentNumbers={calculateCommentNumbers} />
               </>
             }

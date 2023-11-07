@@ -1,13 +1,16 @@
 import { useNavigate } from 'react-router-dom';
 
+import ReturnButtonSVG from '../../images/shared//icon-arrow-left.svg';
+//STYLES
+
 import { ProductRequestNavbar, ReturnButton, EditFeedbackButton } from '../RequestDetails/RequestDetails';
 
-import ReturnButtonSVG from '../../images/shared//icon-arrow-left.svg';
-
+//TS
 interface BackButtonProps {
-  isEdit?: boolean;
+  isEdit: boolean;
   requestID?: number;
 }
+
 const BackButton: React.FC<BackButtonProps> = ({ isEdit, requestID }) => {
   const navigate = useNavigate();
 
@@ -15,7 +18,7 @@ const BackButton: React.FC<BackButtonProps> = ({ isEdit, requestID }) => {
     navigate(-1);
   };
 
-  const editRequest = () => {
+  const goToEditRequest = (requestID?: number) => {
     const editedRequestID = requestID;
     navigate(`/requests/${editedRequestID}/edit`);
   };
@@ -26,7 +29,7 @@ const BackButton: React.FC<BackButtonProps> = ({ isEdit, requestID }) => {
         <img src={ReturnButtonSVG} alt="Arrow Left / Go Back" />
         Go Back
       </ReturnButton>
-      {isEdit && <EditFeedbackButton onClick={editRequest}>Edit Feedback</EditFeedbackButton>}
+      {isEdit && <EditFeedbackButton onClick={() => goToEditRequest(requestID)}>Edit Feedback</EditFeedbackButton>}
     </ProductRequestNavbar>
   );
 };

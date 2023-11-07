@@ -1,6 +1,9 @@
 import styled from 'styled-components';
-import IconCheck from '../../images/shared/icon-check.svg';
 import { UseFormRegister } from 'react-hook-form';
+
+import IconCheck from '../../images/shared/icon-check.svg';
+
+//TS
 import { FormValues } from '../RequestForm/RequestForm';
 
 const LabelForOptionInput = styled.label`
@@ -27,22 +30,27 @@ const LabelForOptionInputUI = styled.span`
   }
 `;
 
+//TS
+
 interface FilteredOptionProps {
   label: string;
   value: string;
   selectedValue: string;
-  onChange: (value: string) => void;
+  onValueChange: (value: string) => void;
   register?: UseFormRegister<FormValues>;
   type?: string;
 }
 
-const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onChange, register, type }) => {
+const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedValue, onValueChange, register, type }) => {
+  // FUNCTION FOR KEYBOARD NAVIGATION ON CUSTOM MODAL
+
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') {
-      onChange(value);
+      onValueChange(value);
       event.preventDefault();
     }
   };
+
   return (
     <LabelForOptionInput onKeyDown={handleKeyDown} tabIndex={0}>
       <input
@@ -50,7 +58,7 @@ const FilteredOption: React.FC<FilteredOptionProps> = ({ label, value, selectedV
         onChange={() => {}}
         value={value}
         checked={selectedValue === value}
-        onClick={() => onChange(value)}
+        onClick={() => onValueChange(value)}
         style={{ display: 'none' }}
         {...(register && (type === 'category' ? register('category') : register('status')))}
       />
