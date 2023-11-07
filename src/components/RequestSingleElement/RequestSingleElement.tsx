@@ -7,20 +7,23 @@ import ArrowUpBlueSVG from '../../images/shared/icon-arrow-up-blue.svg';
 import CommentSVG from '../../images/shared/icon-comments.svg';
 
 import { capitalizeFirstLetter } from '../../Utils/Functions';
+import { Dot } from '../Navbar/NavbarStyles';
+import { getColorForStatus } from '../../Utils/Functions';
 
 interface SingleRequestElementProps {
   request: ProductRequest;
   calculateCommentNumbers: (request: any) => number;
+  status?: string;
 }
 
-const SuggestionSingleElement = styled.div`
+const SingleElement = styled.div<{ status: string }>`
   background-color: ${(props) => props.theme.colors.white};
   width: 100%;
   height: auto;
   padding: 20px;
   border-radius: 10px;
+  border-top: 10px solid ${(props) => getColorForStatus(props.status)};
 `;
-
 const SpaceBetweenContainer = styled.div`
   display: flex;
   align-items: center;
@@ -53,10 +56,13 @@ const UpvotesTag = styled(ButtonTag)`
   gap: 15px;
 `;
 
-const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, calculateCommentNumbers }) => {
-
+const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, calculateCommentNumbers, status }) => {
   return (
-    <SuggestionSingleElement key={request.id}>
+    <SingleElement key={request.id} status={request.status}>
+      <div style={{ marginBottom: '10px' }}>
+        <Dot $status={request.status} />
+        <p style={{ display: 'inline-block', color: '#647196 ' }}>{capitalizeFirstLetter(request.status)}</p>
+      </div>
       <RequestTitle>{request.title}</RequestTitle>
       <RequestDescription>{request.description}</RequestDescription>
       <ButtonTag style={{ display: 'block', marginBottom: '10px' }}>{capitalizeFirstLetter(request.category)}</ButtonTag>
@@ -70,7 +76,7 @@ const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, ca
           <CommentTag>{calculateCommentNumbers(request)}</CommentTag>
         </SpaceBetweenContainer>
       </SpaceBetweenContainer>
-    </SuggestionSingleElement>
+    </SingleElement>
   );
 };
 

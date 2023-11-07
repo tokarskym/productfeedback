@@ -5,7 +5,7 @@ import { ProductRequestNavbar, ReturnButton, EditFeedbackButton } from '../Reque
 import ReturnButtonSVG from '../../images/shared//icon-arrow-left.svg';
 
 interface BackButtonProps {
-  isEdit: boolean;
+  isEdit?: boolean;
   requestID?: number;
 }
 const BackButton: React.FC<BackButtonProps> = ({ isEdit, requestID }) => {

@@ -14,6 +14,8 @@ const SuggestionsContainer = styled(Container)`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding-top: 140px;
+  margin-bottom: 100px;
 `;
 
 interface MainPageProps {

@@ -6,6 +6,7 @@ import Header from './components/Header/Header';
 import MainPage from './components/MainPage/MainPage';
 import RequestDetails from './components/RequestDetails/RequestDetails';
 import RequestForm from './components/RequestForm/RequestForm';
+import Roadmap from './components/Roadmap/Roadmap';
 
 import { ProductRequest } from './data/data';
 
@@ -15,6 +16,15 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 import { updatedData } from './data/data';
 
+export type CountsType = {
+  [status: string]: number;
+};
+
+type ItemType = {
+  status: string;
+  [key: string]: any;
+};
+
 function App() {
   const [selectedFilter, setSelectedFilter] = useState<string>('Least Upvotes');
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
@@ -22,6 +32,24 @@ function App() {
   const productRequests = updatedData.productRequests;
   const currentUser = updatedData.currentUser;
   const [requestList, setRequestList] = useState<ProductRequest[]>(productRequests);
+  const [statusCounts, setStatusCounts] = useState<CountsType>({});
+
+  useEffect(() => {
+    const counts: CountsType = {};
+
+    requestList.forEach((item: ItemType) => {
+      if (item.status === 'suggestion') {
+        return;
+      }
+
+      if (!counts[item.status]) {
+        counts[item.status] = 0;
+      }
+      counts[item.status]++;
+    });
+
+    setStatusCounts(counts);
+  }, [requestList]);
 
   const handleFilterChange = (filter: string) => {
     setSelectedFilter(filter);
@@ -123,7 +151,8 @@ function App() {
           <Route
             path="/requests/:id"
             element={<RequestDetails requestList={requestList} onAddNewComment={addComment} onAddReply={addReply} calculateCommentNumbers={calculateCommentNumbers} />}
-          />
+          />{' '}
+          <Route path="/roadmap" element={<Roadmap requestList={requestList} statusCounts={statusCounts} calculateCommentNumbers={calculateCommentNumbers} />} />
           <Route
             path="/requests/:id/new"
             element={
@@ -152,7 +181,7 @@ function App() {
             path="/"
             element={
               <>
-                <Navbar handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
+                <Navbar statusCounts={statusCounts} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
                 <Header handleFilterChange={handleFilterChange} requestList={requestList} />
                 <MainPage selectedFilter={selectedFilter} selectedCategory={selectedCategory} requestList={requestList} calculateCommentNumbers={calculateCommentNumbers} />
               </>

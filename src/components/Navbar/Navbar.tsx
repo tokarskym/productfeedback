@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 
 import Hamburger from '../../images/shared/mobile/icon-hamburger.svg';
 import CloseHamburger from '../../images/shared/mobile/icon-close.svg';
@@ -6,45 +7,22 @@ import { capitalizeFirstLetter } from '../../Utils/Functions';
 
 import { NavbarHeader, NavbarContainer, Logo, AppName, HamburgerButton, ModalBackground, ModalContainer, TagsContainer, ButtonTag, Dot } from './NavbarStyles';
 
-import { data } from '../../data/data';
-
-type CountsType = {
-  [status: string]: number;
-};
-
-type ItemType = {
-  status: string;
-  [key: string]: any;
-};
+import { CountsType } from '../../App';
 
 interface NavbarProps {
   handleCategoryChange: (category: string) => void;
   selectedCategory: string;
+  statusCounts: CountsType;
 }
-const Navbar: React.FC<NavbarProps> = ({ handleCategoryChange, selectedCategory }) => {
+const Navbar: React.FC<NavbarProps> = ({ statusCounts, handleCategoryChange, selectedCategory }) => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
-  const [statusCounts, setStatusCounts] = useState<CountsType>({});
 
   const TagsArray: string[] = ['All', 'UI', 'UX', 'Enhancement', 'Bug', 'Feature'];
 
-  const requestsData = data.productRequests;
-
-  useEffect(() => {
-    const counts: CountsType = {};
-
-    requestsData.forEach((item: ItemType) => {
-      if (item.status === 'suggestion') {
-        return;
-      }
-
-      if (!counts[item.status]) {
-        counts[item.status] = 0;
-      }
-      counts[item.status]++;
-    });
-
-    setStatusCounts(counts);
-  }, [requestsData]);
+  const onCategoryChange = (category: string) => {
+    handleCategoryChange(category);
+    setIsHamburgerOpen(!isHamburgerOpen);
+  };
 
   const isValidStatus = (status: string): status is 'suggestion' | 'planned' | 'in-progress' | 'live' => {
     return ['suggestion', 'planned', 'in-progress', 'live'].includes(status);
@@ -67,14 +45,24 @@ const Navbar: React.FC<NavbarProps> = ({ handleCategoryChange, selectedCategory 
         <ModalContainer className={isHamburgerOpen ? 'active' : ''}>
           <TagsContainer>
             {TagsArray.map((tag) => (
-              <ButtonTag $isChosen={selectedCategory === tag} key={tag} onClick={() => handleCategoryChange(tag)}>
+              <ButtonTag $isChosen={selectedCategory === tag} key={tag} onClick={() => onCategoryChange(tag)}>
                 {tag}
               </ButtonTag>
             ))}
           </TagsContainer>
           <TagsContainer>
-            <h3>Roadmap</h3>
-            <button>View</button>
+            <div
+              style={{
+                display: 'flex',
+                gap: '60px',
+                alignItems: 'center',
+              }}
+            >
+              <h3>Roadmap</h3>
+              <Link style={{ textDecoration: 'underline', color: 'blue' }} to={`/roadmap`}>
+                View
+              </Link>
+            </div>
             <ul style={{ width: '100%' }}>
               {Object.keys(statusCounts).map((status) => {
                 if (isValidStatus(status)) {

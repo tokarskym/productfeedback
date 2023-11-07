@@ -9,6 +9,8 @@ export const NavbarHeader = styled.nav`
   background-repeat: no-repeat;
   background-size: cover;
   display: flex;
+  position: fixed;
+  z-index: 9999;
 `;
 
 export const NavbarContainer = styled(Container)`
@@ -91,7 +93,7 @@ export const ButtonTag = styled.button<{ $isChosen?: boolean }>`
 `;
 
 type DotProps = {
-  $status: 'live' | 'planned' | 'in-progress' | 'suggestion';
+  $status: string;
 };
 
 export const Dot = styled.span<DotProps>`

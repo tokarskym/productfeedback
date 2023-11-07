@@ -6,6 +6,8 @@ export const HeaderBar = styled.div`
   height: 56px;
   background-color: ${(props) => props.theme.colors.darkBlue};
   margin-bottom: 20px;
+  position: fixed;
+  top: 72px;
 
   & p {
     color: #f2f4fe;
