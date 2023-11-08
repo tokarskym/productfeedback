@@ -1,12 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import Hamburger from '../../images/shared/mobile/icon-hamburger.svg';
 import CloseHamburger from '../../images/shared/mobile/icon-close.svg';
+
 import { capitalizeFirstLetter } from '../../Utils/Functions';
 
-import { NavbarHeader, NavbarContainer, Logo, AppName, HamburgerButton, ModalBackground, ModalContainer, TagsContainer, ButtonTag, Dot } from './NavbarStyles';
-
+//STYlES
+import { NavbarHeader, NavbarContainer, Logo, AppName, HamburgerButton, ModalBackground, ModalContainer, ListElement, TagsContainer, ButtonTag, Dot } from './NavbarStyles';
+//TS
 import { CountsType } from '../../App';
 
 interface NavbarProps {
@@ -67,13 +69,13 @@ const Navbar: React.FC<NavbarProps> = ({ statusCounts, handleCategoryChange, sel
               {Object.keys(statusCounts).map((status) => {
                 if (isValidStatus(status)) {
                   return (
-                    <li key={status} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <ListElement key={status}>
                       <div>
                         <Dot $status={status} />
                         <p style={{ display: 'inline-block', color: '#647196 ' }}>{capitalizeFirstLetter(status)}</p>
                       </div>
                       <h4 style={{ color: '#647196' }}>{statusCounts[status]}</h4>
-                    </li>
+                    </ListElement>
                   );
                 }
                 return null;

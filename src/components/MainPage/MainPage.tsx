@@ -1,12 +1,13 @@
 import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
+import { useMemo } from 'react';
 
-import { useEffect, useState } from 'react';
+//STYLES
 import { Container } from '../GlobalStyles/ReusedStyles';
-
+//COMPONTENTS
 import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
-
+//TS
 import { ProductRequest } from '../../data/data';
 
 const SuggestionsContainer = styled(Container)`
@@ -24,62 +25,44 @@ interface MainPageProps {
   calculateCommentNumbers: (request: ProductRequest) => number;
 }
 
+const getSortFunction = (selectedFilter: string, calculateCommentNumbers: (request: ProductRequest) => number): ((a: ProductRequest, b: ProductRequest) => number) | undefined => {
+  switch (selectedFilter) {
+    case 'Most Upvotes':
+      return (a: ProductRequest, b: ProductRequest) => b.upvotes - a.upvotes;
+    case 'Least Upvotes':
+      return (a: ProductRequest, b: ProductRequest) => a.upvotes - b.upvotes;
+    case 'Most Comments':
+      return (a: ProductRequest, b: ProductRequest) => calculateCommentNumbers(b) - calculateCommentNumbers(a);
+    case 'Least Comments':
+      return (a: ProductRequest, b: ProductRequest) => calculateCommentNumbers(a) - calculateCommentNumbers(b);
+    default:
+      return undefined;
+  }
+};
+
 const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers }) => {
-  const productSuggestions = requestList.filter((request) => request.status === 'suggestion');
-  const [sortedSuggestions, setSortedSuggestions] = useState<ProductRequest[]>(productSuggestions);
 
-  useEffect(() => {
-    const newProductSuggestions = requestList.filter((request) => request.status === 'suggestion');
-    setSortedSuggestions(newProductSuggestions);
-  }, [requestList]);
+  const sortedSuggestions = useMemo(() => {
+    let filteredSuggestions = requestList.filter((request) => request.status === 'suggestion');
+    
+    if (selectedCategory !== 'All') {
+      const categoryFilter = selectedCategory === 'UI' || selectedCategory === 'UX' ? selectedCategory.toUpperCase() : selectedCategory.toLowerCase();
 
-  useEffect(() => {
-    const newSortedSuggestions = [...productSuggestions];
-
-    if (selectedFilter === 'Most Upvotes') {
-      newSortedSuggestions.sort((a, b) => b.upvotes - a.upvotes);
-    } else if (selectedFilter === 'Least Upvotes') {
-      newSortedSuggestions.sort((a, b) => a.upvotes - b.upvotes);
-    } else if (selectedFilter === 'Most Comments') {
-      newSortedSuggestions.sort((a, b) => calculateCommentNumbers(b) - calculateCommentNumbers(a));
-    } else if (selectedFilter === 'Least Comments') {
-      newSortedSuggestions.sort((a, b) => calculateCommentNumbers(a) - calculateCommentNumbers(b));
+      filteredSuggestions = filteredSuggestions.filter((suggestion) => suggestion.category === categoryFilter);
     }
-    setSortedSuggestions(newSortedSuggestions);
-  }, [selectedFilter]);
 
-  useEffect(() => {
-    const newSortedSuggestions = [...productSuggestions];
+    const sortFunction = getSortFunction(selectedFilter, calculateCommentNumbers);
 
-    if (selectedCategory === 'All') {
-      setSortedSuggestions([...productSuggestions]);
-    } else if (selectedCategory === 'Bug') {
-      const bugSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
-      setSortedSuggestions(bugSuggestions);
-    } else if (selectedCategory === 'Enhancement') {
-      const enhacementSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
-      setSortedSuggestions(enhacementSuggestions);
-    } else if (selectedCategory === 'Feature') {
-      const featureSuggestions = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toLowerCase());
-      setSortedSuggestions(featureSuggestions);
-    } else if (selectedCategory === 'UX') {
-      const uxSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toUpperCase());
-      setSortedSuggestions(uxSuggestion);
-    } else if (selectedCategory === 'UI') {
-      const uiSuggestion = newSortedSuggestions.filter((suggestion) => suggestion.category === selectedCategory.toUpperCase());
-      setSortedSuggestions(uiSuggestion);
-    }
-  }, [selectedCategory]);
+    return sortFunction ? [...filteredSuggestions].sort(sortFunction) : filteredSuggestions;
+  }, [requestList, selectedFilter, selectedCategory, calculateCommentNumbers]);
 
   return (
     <SuggestionsContainer>
-      {sortedSuggestions.map((request) => {
-        return (
-          <Link key={request.id} to={`/requests/${request.id}`}>
-            <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
-          </Link>
-        );
-      })}
+      {sortedSuggestions.map((request) => (
+        <Link key={request.id} to={`/requests/${request.id}`}>
+          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
+        </Link>
+      ))}
     </SuggestionsContainer>
   );
 };

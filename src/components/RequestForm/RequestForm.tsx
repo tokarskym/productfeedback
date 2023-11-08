@@ -1,23 +1,24 @@
 import styled from 'styled-components';
-import BackButton from '../BackButton/BackButton';
-
-import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
-import NewFeedbackSVG from '../../images/shared/icon-new-feedback.svg';
-import BlueArrowUpSVG from '../../images/shared/icon-arrow-up-blue.svg';
-import BlueArrowDownSVG from '../../images/shared/icon-arrow-down-blue.svg';
-import FilteredOption from '../Header/FilteredOption';
-
 import { useState } from 'react';
-
-import { HorizontalRule } from '../Header/HeaderStyles';
-import { capitalizeFirstLetter } from '../../Utils/Functions';
-
 import { useForm, SubmitHandler } from 'react-hook-form';
 import * as yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { ProductRequest } from '../../data/data';
-
 import { useParams, useNavigate } from 'react-router-dom';
+
+//STYLES
+import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
+import { HorizontalRule } from '../Header/HeaderStyles';
+//COMPONENTS
+import BackButton from '../BackButton/BackButton';
+import FilteredOption from '../Header/FilteredOption';
+
+import NewFeedbackSVG from '../../images/shared/icon-new-feedback.svg';
+import BlueArrowUpSVG from '../../images/shared/icon-arrow-up-blue.svg';
+import BlueArrowDownSVG from '../../images/shared/icon-arrow-down-blue.svg';
+
+import { capitalizeFirstLetter } from '../../Utils/Functions';
+//TS
+import { ProductRequest } from '../../data/data';
 
 const RequestFormContainer = styled(Container)`
   margin-top: 10px;
@@ -159,10 +160,11 @@ interface RequestFormProps {
   mode: string;
   requestList: ProductRequest[];
   handleDeleteProductRequest: (id: number) => void;
-  handleEditProductRequest: (data: any, updatedProductRequest: ProductRequest) => void;
+  handleEditProductRequest: (data: FormValues, updatedProductRequest: ProductRequest) => void;
 }
 
 const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode, requestList, handleDeleteProductRequest, handleEditProductRequest }) => {
+ 
   const { id } = useParams();
   const navigate = useNavigate();
   const productID = Number(id);

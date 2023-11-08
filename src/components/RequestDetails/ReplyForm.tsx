@@ -1,10 +1,9 @@
-import { TextAreaContainer, TextAreaCommentReply, ErrorParagraph } from './RequestDetails';
-import { PrimaryButton } from '../GlobalStyles/ReusedStyles';
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import * as yup from 'yup';
+//STYLES
+import { TextAreaContainer, TextAreaCommentReply, ErrorParagraph } from './RequestDetails';
+import { PrimaryButton } from '../GlobalStyles/ReusedStyles';
 
 interface ReplyFormProps {
   onSubmitReply: (data: { reply: string }) => void;

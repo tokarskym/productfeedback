@@ -1,13 +1,15 @@
 import styled from 'styled-components';
-import { ProductRequest } from '../../data/data';
-
 import { useParams } from 'react-router-dom';
+import { useState } from 'react';
 
-import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
+//STYLES
 import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
 
-import React, { useState } from 'react';
+//TS
+import { ProductRequest } from '../../data/data';
 
+//COMPONENTS
+import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
 import SingleReply from './SingleReply';
 import ReplyForm from './ReplyForm';
 import NewCommentForm from './NewCommentForm';
@@ -188,7 +190,6 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
   const request = requestList ? requestList.find((request) => request.id === requestID) : undefined;
 
   const onSubmitNewComment = (data: { comment: string }) => {
-    console.log('działa');
     if (request) {
       onAddNewComment(request.id, data.comment as string);
       data.comment = '';
@@ -208,7 +209,6 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
       const { commentId, replyTo } = activeReply;
       onAddReply(request.id, commentId, data.reply, replyTo);
       setActiveReply(null);
-      console.log('hey huje');
     } else {
       console.error('Request or active reply is undefined');
     }

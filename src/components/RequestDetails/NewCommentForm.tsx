@@ -1,10 +1,9 @@
-import { NewCommentContainer, CommentNumber, TextAreaContainer, TextAreaCommentReply, CharsLeftParagraph, ErrorParagraph } from './RequestDetails';
-import { PrimaryButton } from '../GlobalStyles/ReusedStyles';
-
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-
 import * as yup from 'yup';
+//STYLES
+import { NewCommentContainer, CommentNumber, TextAreaContainer, TextAreaCommentReply, CharsLeftParagraph, ErrorParagraph } from './RequestDetails';
+import { PrimaryButton } from '../GlobalStyles/ReusedStyles';
 
 interface NewCommentProps {
   onSubmitNewComment: (data: { comment: string }) => void;

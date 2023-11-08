@@ -1,5 +1,6 @@
+//TS
 import { UserComment, UserReply } from '../../data/data';
-
+//STYLES
 import { CommentHeader, UserInfoContainer, UserImage, UserName, UserNickName, ReplyButton, CommentContent, ReplyTo } from './RequestDetails';
 
 interface SingleReplyProps {
