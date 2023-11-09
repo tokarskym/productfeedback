@@ -37,6 +37,7 @@ const NoFeedbackWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   gap: 20px;
+  margin-top: 40px;
 
   & p {
     text-align: center;
@@ -54,6 +55,7 @@ interface MainPageProps {
   selectedCategory: string;
   requestList: ProductRequest[];
   calculateCommentNumbers: (request: ProductRequest) => number;
+  handleUpvote: (updatedProductRequest: ProductRequest) => void;
 }
 
 const getSortFunction = (selectedFilter: string, calculateCommentNumbers: (request: ProductRequest) => number): ((a: ProductRequest, b: ProductRequest) => number) | undefined => {
@@ -71,7 +73,7 @@ const getSortFunction = (selectedFilter: string, calculateCommentNumbers: (reque
   }
 };
 
-const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers }) => {
+const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers, handleUpvote }) => {
   const sortedSuggestions = useMemo(() => {
     let filteredSuggestions = requestList.filter((request) => request.status === 'suggestion');
 
@@ -97,7 +99,7 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
     <SuggestionsContainer>
       {sortedSuggestions.map((request) => (
         <Link key={request.id} to={`/requests/${request.id}`}>
-          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
+          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} />
         </Link>
       ))}
 

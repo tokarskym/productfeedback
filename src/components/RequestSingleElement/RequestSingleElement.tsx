@@ -14,6 +14,7 @@ interface SingleRequestElementProps {
   request: ProductRequest;
   calculateCommentNumbers: (request: any) => number;
   status?: string;
+  handleUpvote: (updatedProductRequest: ProductRequest) => void;
 }
 
 export const SingleElement = styled.div<{ status: string }>`
@@ -54,9 +55,19 @@ const UpvotesTag = styled(ButtonTag)`
   align-items: center;
   justify-content: space-between;
   gap: 15px;
+  cursor: pointer;
+  :hover {
+    color: red;
+  }
 `;
 
-const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, calculateCommentNumbers, status }) => {
+const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, calculateCommentNumbers, status, handleUpvote }) => {
+  const handleUpvoteChange = (event: React.MouseEvent<HTMLButtonElement>, request: ProductRequest) => {
+    event.preventDefault();
+    event.stopPropagation();
+    handleUpvote(request);
+  };
+
   return (
     <SingleElement key={request.id} status={request.status}>
       {request.status !== 'suggestion' && (
@@ -69,7 +80,7 @@ const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, ca
       <RequestDescription>{request.description}</RequestDescription>
       <ButtonTag style={{ display: 'block', marginBottom: '10px' }}>{capitalizeFirstLetter(request.category)}</ButtonTag>
       <SpaceBetweenContainer>
-        <UpvotesTag>
+        <UpvotesTag onClick={(e) => handleUpvoteChange(e, request)}>
           <img src={ArrowUpBlueSVG} />
           {request.upvotes}
         </UpvotesTag>

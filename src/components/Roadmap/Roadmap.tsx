@@ -20,6 +20,7 @@ interface RoadmapProps {
   statusCounts: CountsType;
   requestList: ProductRequest[];
   calculateCommentNumbers: (request: any) => number;
+  handleUpvote: (updatedProductRequest: ProductRequest) => void;
 }
 
 const ProductRequestsContainer = styled(Container)`
@@ -41,7 +42,7 @@ const StatusButton = styled.button<{ $isActive: boolean; status: string }>`
   opacity: ${(props) => (props.$isActive ? '1' : '0.5')};
 `;
 
-const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateCommentNumbers }) => {
+const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateCommentNumbers, handleUpvote }) => {
   const [buttonActive, setButtonActive] = useState<string>('planned');
 
   const statusButtons = ['planned', 'in-progress', 'live'];
@@ -58,13 +59,12 @@ const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateC
     (requests: ProductRequest[]) => {
       return requests.map((request) => (
         <Link key={request.id} to={`/requests/${request.id}`}>
-          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} />
+          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} handleUpvote={handleUpvote} />
         </Link>
       ));
     },
     [calculateCommentNumbers]
   );
-
 
   return (
     <>

@@ -140,7 +140,20 @@ function App() {
       }
     });
     setRequestList(updatedProductRequests);
-    console.log('After update:', updatedProductRequests);
+  };
+
+  const handleUpvote = (updatedProductRequest: ProductRequest) => {
+    const updatedProductRequests = requestList.map((request) => {
+      if (request.id === updatedProductRequest.id) {
+        return {
+          ...updatedProductRequest,
+          upvotes: updatedProductRequest.upvotes + 1,
+        };
+      } else {
+        return request;
+      }
+    });
+    setRequestList(updatedProductRequests);
   };
 
   return (
@@ -150,9 +163,20 @@ function App() {
         <Routes>
           <Route
             path="/requests/:id"
-            element={<RequestDetails requestList={requestList} onAddNewComment={addComment} onAddReply={addReply} calculateCommentNumbers={calculateCommentNumbers} />}
-          />{' '}
-          <Route path="/roadmap" element={<Roadmap requestList={requestList} statusCounts={statusCounts} calculateCommentNumbers={calculateCommentNumbers} />} />
+            element={
+              <RequestDetails
+                requestList={requestList}
+                onAddNewComment={addComment}
+                onAddReply={addReply}
+                calculateCommentNumbers={calculateCommentNumbers}
+                handleUpvote={handleUpvote}
+              />
+            }
+          />
+          <Route
+            path="/roadmap"
+            element={<Roadmap requestList={requestList} statusCounts={statusCounts} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} />}
+          />
           <Route
             path="/requests/:id/new"
             element={
@@ -183,7 +207,13 @@ function App() {
               <>
                 <Navbar statusCounts={statusCounts} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
                 <Header handleFilterChange={handleFilterChange} requestList={requestList} selectedFilter={selectedFilter} />
-                <MainPage selectedFilter={selectedFilter} selectedCategory={selectedCategory} requestList={requestList} calculateCommentNumbers={calculateCommentNumbers} />
+                <MainPage
+                  selectedFilter={selectedFilter}
+                  selectedCategory={selectedCategory}
+                  requestList={requestList}
+                  calculateCommentNumbers={calculateCommentNumbers}
+                  handleUpvote={handleUpvote}
+                />
               </>
             }
           />

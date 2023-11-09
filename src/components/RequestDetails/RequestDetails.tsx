@@ -175,9 +175,10 @@ interface RequestDetailsProps {
   onAddNewComment: (productRequestID: number, newCommentContent: string) => void;
   onAddReply: (productRequestID: number, commentID: number, newReplyContent: string, replyingToUsername: string) => void;
   calculateCommentNumbers: (request: any) => number;
+  handleUpvote: (updatedProductRequest: ProductRequest) => void;
 }
 
-const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewComment, onAddReply, calculateCommentNumbers }) => {
+const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewComment, onAddReply, calculateCommentNumbers, handleUpvote }) => {
   const { id } = useParams();
   let requestID: number | undefined;
 
@@ -221,7 +222,7 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
           <>
             <BackButton isEdit={true} requestID={request.id} />
             <RequestDetailsAndCommentsContainer>
-              <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
+              <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} />
               <CommentsContainer>
                 <CommentNumber>{calculateCommentNumbers(request)} Comments</CommentNumber>
                 {request.comments?.map((comment) => (
