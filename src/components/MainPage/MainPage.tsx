@@ -1,14 +1,17 @@
 import styled from 'styled-components';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useMemo } from 'react';
 
 //STYLES
-import { Container } from '../GlobalStyles/ReusedStyles';
+import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
+
 //COMPONTENTS
 import RequestSingleElement from '../RequestSingleElement/RequestSingleElement';
 //TS
 import { ProductRequest } from '../../data/data';
+
+import NoFeedbackSVG from '../../images/shared/illustration-empty.svg';
 
 const SuggestionsContainer = styled(Container)`
   display: flex;
@@ -16,6 +19,34 @@ const SuggestionsContainer = styled(Container)`
   gap: 20px;
   padding-top: 140px;
   margin-bottom: 100px;
+`;
+
+const EmptyPic = styled.img`
+  height: 102px;
+  width: 108px;
+`;
+
+const NoFeedbackWrapper = styled.div`
+  background-color: ${(props) => props.theme.colors.white};
+  width: 100%;
+  height: auto;
+  padding: 50px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  & p {
+    text-align: center;
+    color: ${(props) => props.theme.colors.gray};
+    font-size: 13px;
+  }
+
+  & h2 {
+    color: ${(props) => props.theme.colors.darkerDarkBlue};
+  }
 `;
 
 interface MainPageProps {
@@ -41,10 +72,9 @@ const getSortFunction = (selectedFilter: string, calculateCommentNumbers: (reque
 };
 
 const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers }) => {
-
   const sortedSuggestions = useMemo(() => {
     let filteredSuggestions = requestList.filter((request) => request.status === 'suggestion');
-    
+
     if (selectedCategory !== 'All') {
       const categoryFilter = selectedCategory === 'UI' || selectedCategory === 'UX' ? selectedCategory.toUpperCase() : selectedCategory.toLowerCase();
 
@@ -56,6 +86,13 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
     return sortFunction ? [...filteredSuggestions].sort(sortFunction) : filteredSuggestions;
   }, [requestList, selectedFilter, selectedCategory, calculateCommentNumbers]);
 
+  const navigate = useNavigate();
+
+  const createNewRequest = () => {
+    const newID = requestList.length + 1;
+    navigate(`/requests/${newID}/new`);
+  };
+
   return (
     <SuggestionsContainer>
       {sortedSuggestions.map((request) => (
@@ -63,6 +100,15 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
           <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} />
         </Link>
       ))}
+
+      {sortedSuggestions.length === 0 && (
+        <NoFeedbackWrapper>
+          <EmptyPic src={NoFeedbackSVG} alt="There is no feedback in this category picture" />
+          <h2>There is no feedback yet.</h2>
+          <p>Got a suggestion? Found a bug that needs to be squashed? We love hearing about new ideas to improve our app.</p>
+          <PrimaryButton onClick={createNewRequest}>+ Add feedback</PrimaryButton>
+        </NoFeedbackWrapper>
+      )}
     </SuggestionsContainer>
   );
 };

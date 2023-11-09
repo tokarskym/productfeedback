@@ -16,7 +16,7 @@ interface SingleRequestElementProps {
   status?: string;
 }
 
-const SingleElement = styled.div<{ status: string }>`
+export const SingleElement = styled.div<{ status: string }>`
   background-color: ${(props) => props.theme.colors.white};
   width: 100%;
   height: auto;
