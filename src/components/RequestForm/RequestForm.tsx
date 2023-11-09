@@ -7,10 +7,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 
 //STYLES
 import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
-import { HorizontalRule } from '../Header/HeaderStyles';
+import { ErrorParagraph } from '../RequestDetails/RequestDetails';
 //COMPONENTS
 import BackButton from '../BackButton/BackButton';
-import FilteredOption from '../Header/FilteredOption';
 import CategorySelector from './CategorySelector';
 import StatusSelector from './StatusSelector';
 
@@ -262,10 +261,11 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
           <NewFeedbackIcon src={NewFeedbackSVG} />
           <RequestFormHeader>{mode === 'edit' ? `Editing '${requestToEdit?.title}'` : 'Create New Feedback'} </RequestFormHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <FormFieldWrapper>
+            <FormFieldWrapper style={{ position: 'relative' }}>
               <FormFieldLabel htmlFor="feedbackTitle">Feedback Title</FormFieldLabel>
               <FormFieldDescription>Add a short, descriptive headline</FormFieldDescription>
               <FeedbackTitleInput id="feedbackTitle" {...register('title')} disabled={categoryModalOpen} />
+              {errors.title && <ErrorParagraph style={{ top: '36px' }}>{errors.title.message}</ErrorParagraph>}
             </FormFieldWrapper>
             <FormFieldWrapper style={{ position: 'relative' }}>
               <FormFieldLabel onClick={fakeLabelFunctionality}>Category</FormFieldLabel>
@@ -288,10 +288,11 @@ const RequestForm: React.FC<RequestFormProps> = ({ handleAddProductRequest, mode
                 register={register}
               />
             )}
-            <FormFieldWrapper>
+            <FormFieldWrapper style={{ position: 'relative' }}>
               <FormFieldLabel htmlFor="description">Feedback Detail</FormFieldLabel>
-              <FormFieldDescription>Include any specific comments on what should be improved, added, etc.</FormFieldDescription>
+              <FormFieldDescription>Include any specific comments on what should be improved, added.</FormFieldDescription>
               <FeedbackDetailInput id="description" {...register('description')} disabled={categoryModalOpen} />
+              {errors.description && <ErrorParagraph style={{ top: '38px' }}>{errors.description.message}</ErrorParagraph>}
             </FormFieldWrapper>
             <ButtonsDiv $isDelete={mode === 'edit'}>
               {mode === 'edit' && (
