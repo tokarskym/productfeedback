@@ -64,7 +64,7 @@ const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateC
         </Link>
       ));
     },
-    [calculateCommentNumbers, requestList, handleUpvote, isTablet]
+    [calculateCommentNumbers, handleUpvote, isTablet]
   );
 
   const renderParagraph = (status: string) => {
