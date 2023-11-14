@@ -80,7 +80,7 @@ const Header: React.FC<HeaderProps> = ({ handleFilterChange, requestList, select
           <div style={{ display: 'flex', alignItems: 'center' }}>
             {isTablet && (
               <>
-                <img style={{ marginRight: '20px' }} src={SuggestionIconSVG} />
+                <img style={{ marginRight: '20px' }} src={SuggestionIconSVG} alt="" />
                 <h3>{suggestionsLength} Suggestions</h3>{' '}
               </>
             )}

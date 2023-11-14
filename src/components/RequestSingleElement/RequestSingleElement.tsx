@@ -101,7 +101,7 @@ const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, ca
             </div>
           )}
           <UpvotesTag style={{ display: $forceMobileStyle ? 'none' : 'inline-block' }} onClick={(e) => handleUpvoteChange(e, request)}>
-            <img src={ArrowUpBlueSVG} />
+            <img src={ArrowUpBlueSVG} alt="" />
             {request.upvotes}
           </UpvotesTag>
           <div style={{ display: $forceMobileStyle ? 'inline-block' : 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
@@ -113,11 +113,11 @@ const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, ca
             <div>
               <SpaceBetweenElements style={{ display: $forceMobileStyle ? 'flex' : 'inline-block' }}>
                 <UpvotesTag $forceMobileStyle={$forceMobileStyle} style={{ display: $forceMobileStyle ? 'flex' : 'none' }} onClick={(e) => handleUpvoteChange(e, request)}>
-                  <img src={ArrowUpBlueSVG} />
+                  <img src={ArrowUpBlueSVG} alt="" />
                   {request.upvotes}
                 </UpvotesTag>
                 <div>
-                  <img src={CommentSVG} style={{ display: 'inline-block' }} />
+                  <img src={CommentSVG} alt="" style={{ display: 'inline-block' }} />
                   <CommentTag>{calculateCommentNumbers(request)}</CommentTag>
                 </div>
               </SpaceBetweenElements>
@@ -139,11 +139,11 @@ const RequestSingleElement: React.FC<SingleRequestElementProps> = ({ request, ca
           <ButtonTag style={{ display: 'block', marginBottom: '10px' }}>{capitalizeFirstLetter(request.category)}</ButtonTag>
           <SpaceBetweenContainer>
             <UpvotesTag onClick={(e) => handleUpvoteChange(e, request)}>
-              <img src={ArrowUpBlueSVG} />
+              <img src={ArrowUpBlueSVG} alt="" />
               {request.upvotes}
             </UpvotesTag>
             <SpaceBetweenContainer>
-              <img src={CommentSVG} style={{ display: 'inline-block' }} />
+              <img src={CommentSVG} style={{ display: 'inline-block' }} alt="" />
               <CommentTag>{calculateCommentNumbers(request)}</CommentTag>
             </SpaceBetweenContainer>
           </SpaceBetweenContainer>

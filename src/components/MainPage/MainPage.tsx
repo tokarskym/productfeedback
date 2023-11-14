@@ -100,7 +100,7 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
 
   useEffect(() => {
     setSuggestionsLength(sortedSuggestions.length);
-  }, [sortedSuggestions.length]);
+  }, [sortedSuggestions.length, setSuggestionsLength]);
 
   const navigate = useNavigate();
 
