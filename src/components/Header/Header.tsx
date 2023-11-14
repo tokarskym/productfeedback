@@ -31,6 +31,7 @@ const NavbarFixed = styled(NavbarContainer)`
     position: fixed; 
     top: 0; 
     left 0; 
+    margin-left: 20px; 
   }
 `;
 
@@ -66,7 +67,7 @@ const Header: React.FC<HeaderProps> = ({ handleFilterChange, requestList, select
   };
 
   return (
-    <HeaderBar style={{ marginTop: '20px' }}>
+    <HeaderBar>
       <FilterDiv style={{ position: 'relative' }}>
         <NavbarFixed style={{ position: 'absolute', top: '-10px', left: '-550px' }}>
           <TabletLogoContainer>

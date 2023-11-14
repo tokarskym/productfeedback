@@ -20,6 +20,9 @@ export const HeaderBar = styled.div`
     border-radius: 10px;
     max-width: 890px;
   }
+  @media (min-width: 1440px) {
+    margin-top: 20px;
+  }
 `;
 
 export const FilterDiv = styled(Container)`

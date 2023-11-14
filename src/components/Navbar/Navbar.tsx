@@ -18,9 +18,9 @@ export const TabletLogoContainer = styled(TagsContainer)`
   background-size: cover;
   flex-direction: column;
   justify-content: flex-end;
-  @media (min-width: 1024px) {
+  @media (min-width: 1440px) {
     background-image: url('/images/backgroundheader/desktop/background-header.png');
-    max-width: 255px;
+    max-width: 225px;
   }
 `;
 

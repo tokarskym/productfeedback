@@ -98,8 +98,8 @@ export const TagsContainer = styled.div`
     height: 178px;
     max-width: 283px;
   }
-  @media (min-width: 1024px) {
-    max-width: 255px;
+  @media (min-width: 1440px) {
+    max-width: 225px;
     height: 200px;
     flex: none;
   }
