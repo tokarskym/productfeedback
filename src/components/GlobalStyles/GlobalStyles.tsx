@@ -12,7 +12,7 @@ body {
     font-family: 'Jost', sans-serif;
     font-size: 16px; 
     background-color: #F7F8FD; 
-}
+
 
 h1, h2, h3, h4, h5, h6, p, ul,li {
     margin: 0; 

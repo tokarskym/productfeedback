@@ -33,6 +33,8 @@ const NewRequestForm = styled.div`
   padding: 20px;
   border-radius: 10px;
   position: relative;
+  max-width: 890px;
+  margin: 0 auto;
 `;
 
 const NewFeedbackIcon = styled.img`

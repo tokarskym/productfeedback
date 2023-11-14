@@ -20,6 +20,9 @@ export const ProductRequestNavbar = styled(Container)`
   align-items: center;
   justify-content: space-between;
   height: 72px;
+  @media (min-width: 768px) {
+    max-width: 890px;
+  }
 `;
 
 export const ReturnButton = styled.button`
@@ -51,11 +54,20 @@ export const CommentsContainer = styled.div`
   padding: 20px;
   border-radius: 10px;
   margin-top: 20px;
+  @media (min-width: 768px) {
+    max-width: 890px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 `;
 
 export const NewCommentContainer = styled(CommentsContainer)`
   margin-top: 24px;
   margin-bottom: 24px;
+  @media (min-width: 768px) {
+    max-width: 890px;
+    margin: 24px auto;
+  }
 `;
 
 export const CommentNumber = styled.h3`
@@ -113,7 +125,7 @@ export const SingleReplyContainer = styled.div<{ $isFirstChild: boolean }>`
   &::before {
     content: '';
     position: absolute;
-    left: -23px; /* Przesunięcie względem lewej krawędzi rodzica o szerokość marginesu */
+    left: -23px;
     top: 0;
     bottom: 0;
     width: 1px;
@@ -176,9 +188,10 @@ interface RequestDetailsProps {
   onAddReply: (productRequestID: number, commentID: number, newReplyContent: string, replyingToUsername: string) => void;
   calculateCommentNumbers: (request: any) => number;
   handleUpvote: (updatedProductRequest: ProductRequest) => void;
+  isTablet: boolean;
 }
 
-const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewComment, onAddReply, calculateCommentNumbers, handleUpvote }) => {
+const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewComment, onAddReply, calculateCommentNumbers, handleUpvote, isTablet }) => {
   const { id } = useParams();
   let requestID: number | undefined;
 
@@ -222,7 +235,7 @@ const RequestDetails: React.FC<RequestDetailsProps> = ({ requestList, onAddNewCo
           <>
             <BackButton isEdit={true} requestID={request.id} />
             <RequestDetailsAndCommentsContainer>
-              <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} />
+              <RequestSingleElement $forceMobileStyle={true} request={request} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} isTablet={isTablet} />
               <CommentsContainer>
                 <CommentNumber>{calculateCommentNumbers(request)} Comments</CommentNumber>
                 {request.comments?.map((comment) => (

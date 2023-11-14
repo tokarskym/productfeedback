@@ -17,10 +17,23 @@ export const NavbarContainer = styled(Container)`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  @media (min-width: 768px) {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    gap: 10px;
+    max-width: 890px;
+  }
+  @media (min-width: 1440px) {
+    display: none;
+  }
 `;
 
 export const Logo = styled.h4`
   color: ${(props) => props.theme.colors.white};
+  @media (min-width: 768px) {
+    font-size: 20px;
+    margin: -12px 0;
+  }
 `;
 
 export const AppName = styled.p`
@@ -73,12 +86,23 @@ export const TagsContainer = styled.div`
   height: auto;
   padding: 20px;
   background-color: ${(props) => props.theme.colors.white};
+  border-radius: 10px;
   margin-bottom: 20px;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   row-gap: 14px;
   column-gap: 5px;
+  @media (min-width: 768px) {
+    flex: 1;
+    height: 178px;
+    max-width: 283px;
+  }
+  @media (min-width: 1024px) {
+    max-width: 255px;
+    height: 200px;
+    flex: none;
+  }
 `;
 
 export const ButtonTag = styled.button<{ $isChosen?: boolean }>`

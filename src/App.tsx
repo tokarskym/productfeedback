@@ -33,6 +33,7 @@ function App() {
   const currentUser = updatedData.currentUser;
   const [requestList, setRequestList] = useState<ProductRequest[]>(productRequests);
   const [statusCounts, setStatusCounts] = useState<CountsType>({});
+  const [suggestionsLength, setSuggestionsLength] = useState<number>(0);
 
   useEffect(() => {
     const counts: CountsType = {};
@@ -41,7 +42,6 @@ function App() {
       if (item.status === 'suggestion') {
         return;
       }
-
       if (!counts[item.status]) {
         counts[item.status] = 0;
       }
@@ -156,6 +156,22 @@ function App() {
     setRequestList(updatedProductRequests);
   };
 
+  //
+
+  const [isTablet, setIsTablet] = useState(window.innerWidth >= 768);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      setIsTablet(window.innerWidth >= 768);
+    };
+
+    window.addEventListener('resize', updateWidth);
+
+    updateWidth();
+
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
@@ -170,12 +186,15 @@ function App() {
                 onAddReply={addReply}
                 calculateCommentNumbers={calculateCommentNumbers}
                 handleUpvote={handleUpvote}
+                isTablet={isTablet}
               />
             }
           />
           <Route
             path="/roadmap"
-            element={<Roadmap requestList={requestList} statusCounts={statusCounts} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} />}
+            element={
+              <Roadmap requestList={requestList} statusCounts={statusCounts} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} isTablet={isTablet} />
+            }
           />
           <Route
             path="/requests/:id/new"
@@ -201,18 +220,30 @@ function App() {
               />
             }
           />
+
           <Route
             path="/"
             element={
               <>
-                <Navbar statusCounts={statusCounts} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} />
-                <Header handleFilterChange={handleFilterChange} requestList={requestList} selectedFilter={selectedFilter} />
+                <Navbar statusCounts={statusCounts} handleCategoryChange={handleCategoryChange} selectedCategory={selectedCategory} isTablet={isTablet} />
+                <Header
+                  handleFilterChange={handleFilterChange}
+                  requestList={requestList}
+                  selectedFilter={selectedFilter}
+                  isTablet={isTablet}
+                  suggestionsLength={suggestionsLength}
+                  statusCounts={statusCounts}
+                  onCategoryChange={handleCategoryChange}
+                  selectedCategory={selectedCategory}
+                />
                 <MainPage
                   selectedFilter={selectedFilter}
                   selectedCategory={selectedCategory}
                   requestList={requestList}
                   calculateCommentNumbers={calculateCommentNumbers}
                   handleUpvote={handleUpvote}
+                  setSuggestionsLength={setSuggestionsLength}
+                  isTablet={isTablet}
                 />
               </>
             }

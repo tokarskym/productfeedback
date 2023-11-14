@@ -13,6 +13,7 @@ const RoadmapNavbar = styled(ProductRequestNavbar)`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: red;
 `;
 
 const ButtonRoadmapWrapper = styled.div`

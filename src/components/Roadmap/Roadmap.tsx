@@ -21,6 +21,7 @@ interface RoadmapProps {
   requestList: ProductRequest[];
   calculateCommentNumbers: (request: any) => number;
   handleUpvote: (updatedProductRequest: ProductRequest) => void;
+  isTablet: boolean;
 }
 
 const ProductRequestsContainer = styled(Container)`
@@ -42,7 +43,7 @@ const StatusButton = styled.button<{ $isActive: boolean; status: string }>`
   opacity: ${(props) => (props.$isActive ? '1' : '0.5')};
 `;
 
-const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateCommentNumbers, handleUpvote }) => {
+const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateCommentNumbers, handleUpvote, isTablet }) => {
   const [buttonActive, setButtonActive] = useState<string>('planned');
 
   const statusButtons = ['planned', 'in-progress', 'live'];
@@ -59,29 +60,75 @@ const Roadmap: React.FC<RoadmapProps> = ({ statusCounts, requestList, calculateC
     (requests: ProductRequest[]) => {
       return requests.map((request) => (
         <Link key={request.id} to={`/requests/${request.id}`}>
-          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} handleUpvote={handleUpvote} />
+          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} status={request.status} handleUpvote={handleUpvote} isTablet={isTablet} />
         </Link>
       ));
     },
     [calculateCommentNumbers]
   );
 
+  const renderParagraph = (status: string) => {
+    if (status === 'planned') {
+      return 'Ideas prioritized for research';
+    } else if (status === 'live') {
+      return 'Released features';
+    } else if (status === 'in-progress') {
+      return 'Currently being developed';
+    }
+  };
+
   return (
     <>
-      <div style={{ backgroundColor: '#373F68', width: '100%' }}>
+      <div style={{ backgroundColor: '#373F68', width: '100%', maxWidth: '1024px', margin: '0 auto' }}>
         <BackButtonRoadmap />
       </div>
-      <div style={{ height: '60px', display: 'flex', flexDirection: 'row' }}>
-        {statusButtons.map((status) => {
-          return (
-            <StatusButton key={status} $isActive={buttonActive === status} onClick={() => setActiveButtonRender(status)} status={status}>
-              {capitalizeFirstLetter(status)} ({statusCounts[status] || 0})
-            </StatusButton>
-          );
-        })}
-      </div>
-      <HorizontalRule />
-      <ProductRequestsContainer>{renderRequestElements(filteredRequests)}</ProductRequestsContainer>
+
+      {!isTablet && (
+        <>
+          <div style={{ height: '60px', display: 'flex', flexDirection: 'row' }}>
+            {statusButtons.map((status) => {
+              return (
+                <StatusButton key={status} $isActive={buttonActive === status} onClick={() => setActiveButtonRender(status)} status={status}>
+                  {capitalizeFirstLetter(status)} ({statusCounts[status] || 0})
+                </StatusButton>
+              );
+            })}
+          </div>
+          <HorizontalRule />
+          <ProductRequestsContainer>{renderRequestElements(filteredRequests)}</ProductRequestsContainer>
+        </>
+      )}
+
+      {isTablet && (
+        <>
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '30px', maxWidth: '1024px', margin: '0 auto' }}>
+            {statusButtons.map((status) => (
+              <div style={{ flex: '1' }}>
+                <h4 style={{ display: 'inline-block', marginTop: '20px', marginBottom: '10px', color: '#3A4374' }}>
+                  {capitalizeFirstLetter(status)} ({statusCounts[status] || 0})
+                </h4>
+                <p style={{ color: '#647196', marginBottom: '20px' }}>{renderParagraph(status)}</p>
+                <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
+                  {requestList
+                    .filter((request) => request.status === status)
+                    .map((filteredRequest) => (
+                      <Link key={filteredRequest.id} to={`/requests/${filteredRequest.id}`}>
+                        <RequestSingleElement
+                          request={filteredRequest}
+                          calculateCommentNumbers={calculateCommentNumbers}
+                          status={filteredRequest.status}
+                          handleUpvote={handleUpvote}
+                          isTablet={isTablet}
+                          $forceMobileStyle={true}
+                        />
+                      </Link>
+                    ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </>
   );
 };

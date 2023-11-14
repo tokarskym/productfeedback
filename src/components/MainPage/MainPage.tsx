@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import { Link, useNavigate } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 
 //STYLES
 import { Container, PrimaryButton } from '../GlobalStyles/ReusedStyles';
@@ -19,6 +19,11 @@ const SuggestionsContainer = styled(Container)`
   gap: 20px;
   padding-top: 140px;
   margin-bottom: 100px;
+  @media (min-width: 768px) {
+    padding-top: 0;
+    margin-top: 40px;
+    max-width: 890px;
+  }
 `;
 
 const EmptyPic = styled.img`
@@ -48,14 +53,21 @@ const NoFeedbackWrapper = styled.div`
   & h2 {
     color: ${(props) => props.theme.colors.darkerDarkBlue};
   }
+
+  @media (min-width: 768px) {
+    max-width: 890px;
+    margin: 0 auto;
+  }
 `;
 
 interface MainPageProps {
   selectedFilter: string;
-  selectedCategory: string;
   requestList: ProductRequest[];
   calculateCommentNumbers: (request: ProductRequest) => number;
   handleUpvote: (updatedProductRequest: ProductRequest) => void;
+  setSuggestionsLength: (suggestionsLength: number) => void;
+  isTablet: boolean;
+  selectedCategory: string;
 }
 
 const getSortFunction = (selectedFilter: string, calculateCommentNumbers: (request: ProductRequest) => number): ((a: ProductRequest, b: ProductRequest) => number) | undefined => {
@@ -73,20 +85,22 @@ const getSortFunction = (selectedFilter: string, calculateCommentNumbers: (reque
   }
 };
 
-const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers, handleUpvote }) => {
+const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, requestList, calculateCommentNumbers, handleUpvote, setSuggestionsLength, isTablet }) => {
   const sortedSuggestions = useMemo(() => {
     let filteredSuggestions = requestList.filter((request) => request.status === 'suggestion');
 
     if (selectedCategory !== 'All') {
       const categoryFilter = selectedCategory === 'UI' || selectedCategory === 'UX' ? selectedCategory.toUpperCase() : selectedCategory.toLowerCase();
-
       filteredSuggestions = filteredSuggestions.filter((suggestion) => suggestion.category === categoryFilter);
     }
 
     const sortFunction = getSortFunction(selectedFilter, calculateCommentNumbers);
-
     return sortFunction ? [...filteredSuggestions].sort(sortFunction) : filteredSuggestions;
   }, [requestList, selectedFilter, selectedCategory, calculateCommentNumbers]);
+
+  useEffect(() => {
+    setSuggestionsLength(sortedSuggestions.length);
+  }, [sortedSuggestions.length]);
 
   const navigate = useNavigate();
 
@@ -99,10 +113,9 @@ const MainPage: React.FC<MainPageProps> = ({ selectedFilter, selectedCategory, r
     <SuggestionsContainer>
       {sortedSuggestions.map((request) => (
         <Link key={request.id} to={`/requests/${request.id}`}>
-          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} />
+          <RequestSingleElement request={request} calculateCommentNumbers={calculateCommentNumbers} handleUpvote={handleUpvote} isTablet={isTablet} />
         </Link>
       ))}
-
       {sortedSuggestions.length === 0 && (
         <NoFeedbackWrapper>
           <EmptyPic src={NoFeedbackSVG} alt="There is no feedback in this category picture" />
