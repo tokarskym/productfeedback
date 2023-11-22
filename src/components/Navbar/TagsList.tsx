@@ -9,7 +9,7 @@ const TagsList: React.FC<TagsListProps> = ({ selectedCategory, onCategoryChange 
   const TagsArray: string[] = ['All', 'UI', 'UX', 'Enhancement', 'Bug', 'Feature'];
 
   return (
-    <TagsContainer>
+    <TagsContainer style={{ zIndex: '9999' }}>
       {TagsArray.map((tag) => (
         <ButtonTag $isChosen={selectedCategory === tag} key={tag} onClick={() => onCategoryChange(tag)}>
           {tag}

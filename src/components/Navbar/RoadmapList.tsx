@@ -13,7 +13,7 @@ const RoadmapList: React.FC<RoadmapListProps> = ({ statusCounts }) => {
   };
 
   return (
-    <TagsContainer>
+    <TagsContainer style={{ zIndex: '9999' }}>
       <div
         style={{
           display: 'flex',

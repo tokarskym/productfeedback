@@ -31,6 +31,9 @@ export const SingleElement = styled.div<{ $status: string; $forceMobileStyle?: b
     flex-direction: row;
     max-width: 890px;
     margin: 0 auto;
+    z-index: 9999;
+    position: relative;
+}
   }
 `;
 export const SpaceBetweenContainer = styled.div<{ $forceMobileStyle?: boolean }>`
